@@ -137,4 +137,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-C01/people_wiki.sframe/*
+C01/w01/people_wiki.sframe/*

@@ -6,11 +6,12 @@ Instructors: [Emily Fox](https://www.coursera.org/instructor/~14032411) and [Car
 
 
 ### C01 - Machine Learning Foundations: A Case Study Approach
- - [-] [ML Foundations: A Case Study Approach](https://www.coursera.org/learn/ml-foundations/home/welcome)
+ - [ ] [ML Foundations: A Case Study Approach](https://www.coursera.org/learn/ml-foundations/home/welcome)
 
-TBD...
+Machine learning is everywhere, but is often operating behind the scenes.  
+This introduction to the specialization provides us with insights into the power of machine learning, and the multitude of intelligent applications we will be able to develop.
 
- - [x] [week 1/PA SFrames](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/C01w01_SFrames.ipynb)
+ - [x] [week 1/PA SFrames](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w01/C01w01_SFrames.ipynb)
  - [ ] [week 2/PA]()
  - [ ] [week 3/PA]()
  - [ ] [week 4/PA]()

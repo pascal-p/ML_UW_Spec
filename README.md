@@ -12,7 +12,7 @@ Machine learning is everywhere, but is often operating behind the scenes.
 This introduction to the specialization provides us with insights into the power of machine learning, and the multitude of intelligent applications we will be able to develop.
 
  - [x] [week 1/PA SFrames](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w01/C01w01_SFrames.ipynb)
- - [ ] [week 2/PA]()
+ - [x] [week 2/PA Predicting house prices](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w02/C01w02_Linear_Regression.ipynb)
  - [ ] [week 3/PA]()
  - [ ] [week 4/PA]()
  - [ ] [week 5/PA]()

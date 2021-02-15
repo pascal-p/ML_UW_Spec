@@ -13,7 +13,7 @@ This introduction to the specialization provides us with insights into the power
 
  - [x] [week 1/PA SFrames](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w01/C01w01_SFrames.ipynb)
  - [x] [week 2/PA Predicting house prices](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w02/C01w02_Linear_Regression.ipynb)
- - [ ] [week 3/PA]()
+ - [x] [week 3/PA Analyzing product sentiment](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w03/C01w03_Sentiment_Classifier.ipynb)
  - [ ] [week 4/PA]()
  - [ ] [week 5/PA]()
  - [ ] [week 6/PA]() 

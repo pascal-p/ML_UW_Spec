@@ -138,5 +138,5 @@ dmypy.json
 .pyre/
 
 C01/w01/people_wiki.sframe/*
-C01/w02/data/*
-C01/w02/*.png
+C01/w0*/data/*
+C01/w0*/*.png

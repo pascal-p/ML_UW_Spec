@@ -1,4 +1,4 @@
-## ML Specialization - Univeristy of Washington / Coursera
+## ML Specialization - University of Washington / Coursera
 
 [Machine Learning Specialization](https://www.coursera.org/specializations/machine-learning)
 
@@ -14,7 +14,7 @@ This introduction to the specialization provides us with insights into the power
  - [x] [week 1/PA SFrames](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w01/C01w01_SFrames.ipynb)
  - [x] [week 2/PA Predicting house prices](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w02/C01w02_Linear_Regression.ipynb)
  - [x] [week 3/PA Analyzing product sentiment](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w03/C01w03_Sentiment_Classifier.ipynb)
- - [ ] [week 4/PA]()
+ - [x] [week 4/PA Retrieving Wikipedia articles](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w04/C01w04_Retrieving_Wikipedia_Articles.ipynb)
  - [ ] [week 5/PA]()
  - [ ] [week 6/PA]() 
 

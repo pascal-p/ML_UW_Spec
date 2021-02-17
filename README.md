@@ -21,9 +21,8 @@ This introduction to the specialization provides us with insights into the power
 ### C02 - Machine Learning: Regression
  - [ ] [ML: Regression](https://www.coursera.org/learn/ml-regression)
 
-TBD...
  
- - [ ] [week 1/PA - TBD]()
+ - [x] [week 1/PA - Fitting a simple linear regression model on housing data](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01/C02w01_nb_pa.ipynb)
  - [ ] [week 2/PA - TBD]()
  - [ ] [week 3/PA - TBD]()
  - [ ] [week 4/PA - TBD]()

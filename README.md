@@ -25,7 +25,9 @@ This introduction to the specialization provides us with insights into the power
  - [x] [week 1/PA - Fitting a simple linear regression model on housing data](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01%20-%20Simple%20Regression/C02w01_nb_pa.ipynb)<br />
        [Fitting a simple linear regression model on housing data/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01%20-%20Simple%20Regression/C02w01_nb_pa.jl)
  - [x] [week 2/PA1 - Multiple Regression Interpretation](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa1.ipynb)<br />
-       [week 2/PA2 - Multiple Regression (GD)](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa2.ipynb)
+       [week 2/PA2 - Multiple Regression (GD)](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa2.ipynb)<br />
+       [week 2/PA1 - Multiple Regression Interpretation/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa1.jl)
+       
  - [ ] [week 3/PA - TBD]() 
  - [ ] [week 4/PA - TBD]()
 

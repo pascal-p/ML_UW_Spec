@@ -29,8 +29,11 @@ This introduction to the specialization provides us with insights into the power
        [week 2/PA1 - Multiple Regression Interpretation/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa1.jl)<br />
        [week 2/PA2 - Multiple Regression (GD)/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa2.jl)
        
- - [ ] [week 3/PA - TBD]() 
+ - [x] [week 3/PA - Polynomial Regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w03%20-%20Assessing%20Performance/C02w03_nb_pa.ipynb) 
  - [ ] [week 4/PA - TBD]()
+ - [ ] [week 5/PA - TBD]()
+ - [ ] [week 6/PA - TBD]() 
+ 
 
 ### C03 - Machine Learning: Classification
  - [ ] [ML: Classification](https://www.coursera.org/learn/ml-classification)

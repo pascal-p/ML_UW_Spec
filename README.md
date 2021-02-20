@@ -33,6 +33,7 @@ This introduction to the specialization provides us with insights into the power
        [week 3/PA - Polynomial Regression/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w03%20-%20Assessing%20Performance/C02w03_nb_pa.jl)<br />
  - [x] [week 4/PA1 - Ridge Regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.ipynb)<br />
        [week 4/PA2 - Ridge Regression(GD)](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.ipynb)<br />
+       [week 4/PA1 - Ridge Regression/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.jl)<br />
        
  - [ ] [week 5/PA - TBD]()
  - [ ] [week 6/PA - TBD]() 

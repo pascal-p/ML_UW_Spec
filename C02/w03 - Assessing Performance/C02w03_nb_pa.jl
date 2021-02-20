@@ -506,7 +506,7 @@ with_terminal() do
 end
 
 # ╔═╡ Cell order:
-# ╠═2fd9b8c0-7255-11eb-1648-07c867431b74
+# ╟─2fd9b8c0-7255-11eb-1648-07c867431b74
 # ╠═5dcfce72-7255-11eb-0aba-778dd1e4d053
 # ╠═6f773f48-7255-11eb-1d7d-ebad5f59c12c
 # ╟─2c111f6e-7258-11eb-1ce3-1582510c7875
@@ -518,7 +518,7 @@ end
 # ╠═ac9cd006-7258-11eb-36da-87759d7d59ef
 # ╠═67424342-7258-11eb-186a-01cd28c1a0a7
 # ╠═7402efd2-7258-11eb-283f-95834d032f9a
-# ╠═ea3e6bea-7258-11eb-294b-fbca040fbd73
+# ╟─ea3e6bea-7258-11eb-294b-fbca040fbd73
 # ╠═1a2e016e-7259-11eb-11f7-ebda74351974
 # ╠═d34d46fa-725a-11eb-2530-b5efd1bc0c4a
 # ╠═37bd7248-725a-11eb-2d75-15427b89b31c

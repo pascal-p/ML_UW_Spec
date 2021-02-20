@@ -68,7 +68,7 @@ typeof(sales.bathrooms)
 
 # ╔═╡ 35b5d05a-71cc-11eb-15a9-852c5a534fab
 md"""
-### Convert to Julia Mtarix/Vector
+### Convert to Julia Matrix/Vector
 """
 
 # ╔═╡ a2928dc6-71c2-11eb-3724-29dc1448a0f3
@@ -228,11 +228,11 @@ md"""
 
 # ╔═╡ 0623d920-71ce-11eb-0936-870685f2e788
 begin
-function train_test_split(df; split=0.8, seed=42) 
+function train_test_split(df; split=0.8, seed=42, shuffled=true) 
 	Random.seed!(seed)
 	(nr, nc) = size(df)
 	nrp = round(Int, nr * split)
-	row_ixes = shuffle(1:nr)
+	row_ixes = shuffled ? shuffle(1:nr) : 1:nr
 	df_train = view(df[row_ixes, :], 1:nrp, 1:nc)
 	df_test = view(df[row_ixes, :], nrp+1:nr, 1:nc)
 	(df_train, df_test)

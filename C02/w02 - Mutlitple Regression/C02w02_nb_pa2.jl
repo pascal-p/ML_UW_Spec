@@ -232,7 +232,7 @@ function train_test_split(df; split=0.8, seed=42, shuffled=true)
 	Random.seed!(seed)
 	(nr, nc) = size(df)
 	nrp = round(Int, nr * split)
-	row_ixes = shuffled ? shuffle(1:nr) : 1:nr
+	row_ixes = shuffled ? shuffle(1:nr) : collect(1:nr)
 	df_train = view(df[row_ixes, :], 1:nrp, 1:nc)
 	df_test = view(df[row_ixes, :], nrp+1:nr, 1:nc)
 	(df_train, df_test)

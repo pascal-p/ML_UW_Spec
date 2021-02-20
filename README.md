@@ -34,6 +34,7 @@ This introduction to the specialization provides us with insights into the power
  - [x] [week 4/PA1 - Ridge Regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.ipynb)<br />
        [week 4/PA2 - Ridge Regression(GD)](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.ipynb)<br />
        [week 4/PA1 - Ridge Regression/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.jl)<br />
+       [week 4/PA2 - Ridge Regression(GD)/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.jl)
        
  - [ ] [week 5/PA - TBD]()
  - [ ] [week 6/PA - TBD]() 

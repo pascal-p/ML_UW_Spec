@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -84,10 +84,7 @@ function train_test_split(df; split=0.8, seed=42, shuffled=true)
 end
 
 # ╔═╡ 76617496-734e-11eb-0177-ef53e0a61ebc
-begin
-	sort!(sales, [:sqft_living, :price], rev=[false, false]);
-	first(sales, 3)
-end
+sort!(sales, [:sqft_living, :price], rev=[false, false]);
 
 # ╔═╡ a626fab6-734e-11eb-0994-f153e8264aaf
 md"""
@@ -135,8 +132,14 @@ end
 md"""
 
 **Quiz Qestion:  What's the learned value for the coefficient of feature `power_1`?**
-  - Answer: 275.0
+  - Answer below:
 """
+
+# ╔═╡ 4686d706-74a8-11eb-101d-c976b98872f3
+round(fp0.coefs[1][2], sigdigits=2)
+
+# ╔═╡ 3c18cc2e-74a9-11eb-336b-1bdf4159d5f8
+getfield(fp0, :coefs)[1][2]
 
 # ╔═╡ 1fe9cdec-7352-11eb-1336-d98c99d2a002
 md"""
@@ -183,91 +186,71 @@ function fit_poly(tset; degree=15, output=:price, l2_penalty=l2_small_penalty)
   (mach, X_, y_)
 end
 	
-function print_coeff(mach)
-  fp = fitted_params(mach)
-	
-  with_terminal() do
-	for (name, c) in fp.coefs[1:1]  # print only first coeff
-	  println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
-    end
-		
-	println("Intercept: $(round(fp.intercept, sigdigits=3))")
+function print_coeff(mach, ix)
+  fp = fitted_params(mach)	
+  println("\n- model $(ix)")
+  for (name, c) in fp.coefs[1:1]  # print only first coeff
+	println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
   end
+		
+  println("Intercept: $(round(fp.intercept, sigdigits=3))")
+end
+	
+function find(machs; key=:min)
+	fps = map(m -> fitted_params(m), machs) |>
+		fps -> map(fp -> getfield(fp, :coefs)[1][2], fps)
+		
+	ix = key == :min ? argmin(fps) : argmax(fps)
+	(fps[ix], string("model_", ix))
 end
 	
 end
 
 # ╔═╡ 6431250e-7354-11eb-1446-37f9f51cb959
 md"""
-##### Set1
+##### Set1, Set2, Set3 & Set4
 """
 
 # ╔═╡ 64f0b460-7353-11eb-23b5-0b2a0c9006f4
-## set 1
 begin
-	(mach_set1, Xset1, yset1) = fit_poly(set1)
-	print_coeff(mach_set1)
+	hsh = Dict{Symbol, Vector{Any}}(:machine => [], :tset => [])
+	
+	for (ix, s) ∈ enumerate((set1, set2, set3, set4))
+		(mach_, X_, y_) = fit_poly(s)
+		push!(hsh[:machine], mach_)
+		push!(hsh[:tset], (X_, y_))
+	end
+	
+	ps = []
+
+	for ix ∈ 1:length(hsh[:machine])
+		(X_, y_) = hsh[:tset][ix]
+		mach_ = hsh[:machine][ix]
+		
+		p1 = scatter(X_.power_1, y_, legend=false, color=[:lightblue], marker=".")
+ 		p2 = scatter!(X_.power_1, predict(mach_, X_), color=[:orange], marker="-")
+		push!(ps, (p1, p2))
+	end
+	
 end
 
-# ╔═╡ 3bf25c7a-7354-11eb-335e-73edbc852a30
-## Visualization
-begin
-	# figure(figsize=(8,6))
-	# plot(Xset1.power_1, yset1, color=[:lightblue], marker=".")
-	scatter(Xset1.power_1, yset1, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset1.power_1, predict(mach_set1, Xset1), color=[:orange], marker="-")
-	# plot(Xset1.power_1, predict(mach_set1, Xset1), color=[:orange]) #, marker="-")
+# ╔═╡ c7c9f6dc-7495-11eb-2bd5-8ba7f20f997a
+with_terminal() do
+	for ix in 1:length(hsh[:machine])
+		print_coeff(hsh[:machine][ix], ix)
+	end
 end
 
-# ╔═╡ 84bc0834-7354-11eb-30bb-e9532e430f6f
-md"""
-##### Set2
-"""
-
-# ╔═╡ 521d7282-7354-11eb-0b52-e7448ad1b4e6
+# ╔═╡ e22363b4-7499-11eb-3b50-5905e5eef045
 begin
-	(mach_set2, Xset2, yset2) = fit_poly(set2)
-	print_coeff(mach_set2)
+	lg1 = grid(2, 2, widths=[0.0, 0.9], heights=[0.5, 0.5])	
+	plot(ps[1]..., ps[2]..., layout=lg1)
 end
 
-# ╔═╡ 8f6ece26-7354-11eb-30ad-8976c7749a18
+# ╔═╡ f08611a8-749a-11eb-1014-e9e29e34a966
 begin
-	scatter(Xset2.power_1, yset2, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset2.power_1, predict(mach_set2, Xset2), color=[:orange], marker="-")
-end
-
-# ╔═╡ a10ed532-7354-11eb-3013-3f50c4bb610d
-md"""
-##### set3
-"""
-
-# ╔═╡ a0e22660-7354-11eb-33a7-49f30c590f07
-begin
-	(mach_set3, Xset3, yset3) = fit_poly(set3)
-	print_coeff(mach_set3)
-end
-
-# ╔═╡ a09f0c10-7354-11eb-3906-4176b483705e
-begin
-	scatter(Xset3.power_1, yset3, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset3.power_1, predict(mach_set3, Xset3), color=[:orange], marker="-")
-end
-
-# ╔═╡ 9f660178-7354-11eb-213c-5fa979a85749
-md"""
-##### set4
-"""
-
-# ╔═╡ 0483452a-71a0-11eb-30c0-7d56ed83e837
-begin
-	(mach_set4, Xset4, yset4) = fit_poly(set4)
-	print_coeff(mach_set4)
-end
-
-# ╔═╡ e05ea0ae-7354-11eb-30fc-65340e99f59c
-begin
-	scatter(Xset4.power_1, yset4, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset4.power_1, predict(mach_set4, Xset4), color=[:orange], marker="-")
+	lg2 = grid(2, 2, widths=[0.0, 0.9], heights=[0.5, 0.5])
+	plot(ps[3]..., ps[4]..., layout=lg2)
 end
 
 # ╔═╡ e4c6e384-7354-11eb-307d-579569191332
@@ -277,9 +260,11 @@ The four curves should differ from one another a lot, as should the coefficients
 
 **Quiz Question:  For the models learned in each of these training sets, what are the smallest and largest values you learned for the coefficient of feature `power_1`?**  
 
-  - smallest: -536.0 (set3)
-  - largest: 748.0 (set1)
+  - cf. below
 """
+
+# ╔═╡ ac0d2d96-74a8-11eb-079e-036266a3b75e
+(smallest=find(hsh[:machine]), largest=find(hsh[:machine]; key=:max))
 
 # ╔═╡ 40bd2ee6-7355-11eb-00ba-1943adaa3fb9
 md"""
@@ -290,77 +275,52 @@ Generally, whenever we see weights change so much in response to change in data,
 With the argument `l2_penalty=1e5`, fit a 15th-order polynomial model on `set1`, `set2`, `set3`, and `set4`. Other than the change in the `l2_penalty` parameter, the code should be the same as the experiment above.
 """
 
+# ╔═╡ 5aa44ab0-7355-11eb-17cb-7bd692a55a37
+md"""
+#### Set1, Set2, Set3 & Set4
+"""
+
 # ╔═╡ 5aa4d1cc-7355-11eb-09a9-dd185f7871e1
 l2_penalty=1e5
 
-# ╔═╡ 5aa44ab0-7355-11eb-17cb-7bd692a55a37
-md"""
-#### Set1
-"""
-
-# ╔═╡ 5a6ddeb2-7355-11eb-2789-ab29446d2fd5
-# set 1
+# ╔═╡ 96c23cd0-749c-11eb-0c80-63c4f283c2e5
 begin
-	(mach_set1b, Xset1b, yset1b) = fit_poly(set1; l2_penalty)
-	print_coeff(mach_set1b)
+	hsh_v1r = Dict{Symbol, Vector{Any}}(:machine => [], :tset => [])
+	
+	for (ix, s) ∈ enumerate((set1, set2, set3, set4))
+		(mach_, X_, y_) = fit_poly(s; l2_penalty)
+		push!(hsh_v1r[:machine], mach_)
+		push!(hsh_v1r[:tset], (X_, y_))
+	end
+	
+	## plot prep.
+	ps2 = []
+	for ix ∈ 1:length(hsh[:machine])
+		(X_, y_) = hsh[:tset][ix]
+		mach_ = hsh[:machine][ix]
+		
+		p1 = scatter(X_.power_1, y_, legend=false, color=[:lightblue], marker=".")
+ 		p2 = scatter!(X_.power_1, predict(mach_, X_), color=[:orange], marker="-")
+		push!(ps2, (p1, p2)) # plot(p1, p2, layout=l)
+	end
+	
+	with_terminal() do
+		for ix in 1:length(hsh_v1r[:machine])
+			print_coeff(hsh_v1r[:machine][ix], ix)
+		end
+	end
 end
 
-# ╔═╡ 5a57a7aa-7355-11eb-311a-49ee4c23fa4b
-## Visualization
+# ╔═╡ 03e1ed82-74a8-11eb-140c-e31183a2314b
 begin
-	scatter(Xset1b.power_1, yset1b, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset1b.power_1, predict(mach_set1b, Xset1b), color=[:orange], marker="-")
+	lg11 = grid(2, 2, widths=[0.0, 0.9], heights=[0.5, 0.5])	
+	plot(ps2[1]..., ps2[2]..., layout=lg11)
 end
 
-# ╔═╡ 5a40f352-7355-11eb-0e45-99b96319953e
-md"""
-#### Set 2
-"""
-
-# ╔═╡ 5a1059b8-7355-11eb-219c-3bde9ab3be34
+# ╔═╡ 034e5e96-74a8-11eb-030d-fb9f7ea9af55
 begin
-	(mach_set2b, Xset2b, yset2b) = fit_poly(set2; l2_penalty)
-	print_coeff(mach_set2b)
-end
-
-# ╔═╡ 59f91dfc-7355-11eb-2e4d-d1f62739cbee
-begin
-	scatter(Xset2b.power_1, yset2b, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset2b.power_1, predict(mach_set2b, Xset2b), color=[:orange], marker="-")
-end
-
-# ╔═╡ 59b7c226-7355-11eb-3061-d574d86ef5be
-md"""
-#### Set 3
-"""
-
-# ╔═╡ d1b6de72-7355-11eb-1f7d-2f2e3d830461
-begin
-	(mach_set3b, Xset3b, yset3b) = fit_poly(set3; l2_penalty)
-	print_coeff(mach_set3b)
-end
-
-# ╔═╡ 5948656e-7355-11eb-28cc-ef04179d0281
-begin
-	scatter(Xset3b.power_1, yset3b, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset3b.power_1, predict(mach_set3b, Xset3b), color=[:orange], marker="-")
-end
-
-# ╔═╡ d4268fa6-7355-11eb-09dd-0f98bbf606f3
-md"""
-#### Set 4
-"""
-
-# ╔═╡ d3f53028-7355-11eb-1a5a-2545b7bfb1d8
-begin
-	(mach_set4b, Xset4b, yset4b) = fit_poly(set4; l2_penalty)
-	print_coeff(mach_set4b)
-end
-
-# ╔═╡ d399ba7c-7355-11eb-0360-d940e85424c5
-begin
-	scatter(Xset4b.power_1, yset4b, legend=false, color=[:lightblue], marker=".")
- 	scatter!(Xset4b.power_1, predict(mach_set4b, Xset4b), color=[:orange], marker="-")
+	lg12 = grid(2, 2, widths=[0.0, 0.9], heights=[0.5, 0.5])
+	plot(ps2[3]..., ps2[4]..., layout=lg12)
 end
 
 # ╔═╡ d32b7d62-7355-11eb-00f5-e15ead474ce5
@@ -370,9 +330,11 @@ These curves should vary a lot less, now that you applied a high degree of regul
 
 **Quiz Question:  For the models learned with the high level of regularization in each of these training sets, what are the smallest and largest values you learned for the coefficient of feature `power_1`?** 
 
-  - smallest: 263.0 (set3)
-  - largest: 597.0 (set14
+  - cf. below
 """
+
+# ╔═╡ a96763a2-74aa-11eb-2a92-87ee73d05221
+(smallest=find(hsh_v1r[:machine]), largest=find(hsh_v1r[:machine]; key=:max))
 
 # ╔═╡ 8e9ed252-7357-11eb-117c-91f7ff585a2d
 md"""
@@ -522,38 +484,27 @@ md"""
 # ╠═e985d03e-734e-11eb-26a7-effe0c92f0fc
 # ╠═ed0179fc-734e-11eb-3309-03b0ef4cdc96
 # ╟─f4ac831a-7351-11eb-10b2-67efef23c436
+# ╠═4686d706-74a8-11eb-101d-c976b98872f3
+# ╠═3c18cc2e-74a9-11eb-336b-1bdf4159d5f8
 # ╟─1fe9cdec-7352-11eb-1336-d98c99d2a002
 # ╠═e054e324-7191-11eb-3e15-c1e0bf73bb0d
 # ╠═4835efa8-7352-11eb-27dd-23dcf67ead55
 # ╠═b3b02ed6-7352-11eb-3a15-9f392deb56d8
 # ╟─6431250e-7354-11eb-1446-37f9f51cb959
 # ╠═64f0b460-7353-11eb-23b5-0b2a0c9006f4
-# ╠═3bf25c7a-7354-11eb-335e-73edbc852a30
-# ╟─84bc0834-7354-11eb-30bb-e9532e430f6f
-# ╠═521d7282-7354-11eb-0b52-e7448ad1b4e6
-# ╠═8f6ece26-7354-11eb-30ad-8976c7749a18
-# ╟─a10ed532-7354-11eb-3013-3f50c4bb610d
-# ╠═a0e22660-7354-11eb-33a7-49f30c590f07
-# ╠═a09f0c10-7354-11eb-3906-4176b483705e
-# ╟─9f660178-7354-11eb-213c-5fa979a85749
-# ╠═0483452a-71a0-11eb-30c0-7d56ed83e837
-# ╠═e05ea0ae-7354-11eb-30fc-65340e99f59c
+# ╠═c7c9f6dc-7495-11eb-2bd5-8ba7f20f997a
+# ╠═e22363b4-7499-11eb-3b50-5905e5eef045
+# ╠═f08611a8-749a-11eb-1014-e9e29e34a966
 # ╟─e4c6e384-7354-11eb-307d-579569191332
+# ╠═ac0d2d96-74a8-11eb-079e-036266a3b75e
 # ╟─40bd2ee6-7355-11eb-00ba-1943adaa3fb9
-# ╠═5aa4d1cc-7355-11eb-09a9-dd185f7871e1
 # ╟─5aa44ab0-7355-11eb-17cb-7bd692a55a37
-# ╠═5a6ddeb2-7355-11eb-2789-ab29446d2fd5
-# ╠═5a57a7aa-7355-11eb-311a-49ee4c23fa4b
-# ╟─5a40f352-7355-11eb-0e45-99b96319953e
-# ╠═5a1059b8-7355-11eb-219c-3bde9ab3be34
-# ╠═59f91dfc-7355-11eb-2e4d-d1f62739cbee
-# ╟─59b7c226-7355-11eb-3061-d574d86ef5be
-# ╠═d1b6de72-7355-11eb-1f7d-2f2e3d830461
-# ╠═5948656e-7355-11eb-28cc-ef04179d0281
-# ╟─d4268fa6-7355-11eb-09dd-0f98bbf606f3
-# ╠═d3f53028-7355-11eb-1a5a-2545b7bfb1d8
-# ╠═d399ba7c-7355-11eb-0360-d940e85424c5
+# ╠═5aa4d1cc-7355-11eb-09a9-dd185f7871e1
+# ╠═96c23cd0-749c-11eb-0c80-63c4f283c2e5
+# ╠═03e1ed82-74a8-11eb-140c-e31183a2314b
+# ╠═034e5e96-74a8-11eb-030d-fb9f7ea9af55
 # ╟─d32b7d62-7355-11eb-00f5-e15ead474ce5
+# ╠═a96763a2-74aa-11eb-2a92-87ee73d05221
 # ╟─8e9ed252-7357-11eb-117c-91f7ff585a2d
 # ╠═91a058b6-7359-11eb-1da5-eba5d339d100
 # ╠═957b90fe-7359-11eb-23fc-039055cd2914

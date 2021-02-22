@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -8,11 +8,8 @@ using InteractiveUtils
 begin
 	using Pkg
 	Pkg.activate("MLJ_env", shared=true)
-end
-
-# ╔═╡ 1f7ea604-71c2-11eb-028a-a166f6f4dc5d
-begin
-	using MLJ
+	
+	# using MLJ
 	using CSV
 	using DataFrames
 	using PlutoUI
@@ -24,6 +21,9 @@ end
 
 # ╔═╡ 96e7042c-73be-11eb-3ac5-9f9998b8c8ff
 using LinearAlgebra
+
+# ╔═╡ d17897d0-7540-11eb-1d5e-191caf244165
+include("./utils.jl")
 
 # ╔═╡ 9dcffb1c-71c1-11eb-2402-39eaa1f1b5e1
 md"""
@@ -47,19 +47,6 @@ md"""
 sales = CSV.File("../../ML_UW_Spec/C02/data/kc_house_test_data.csv"; 
 	header=true) |> DataFrame;
 
-# ╔═╡ 0623d920-71ce-11eb-0936-870685f2e788
-function train_test_split(df; split=0.8, seed=42, shuffled=true) 
-	Random.seed!(seed)
-	(nr, nc) = size(df)
-	nrp = round(Int, nr * split)
-	row_ixes = shuffled ? shuffle(1:nr) : collect(1:nr)
-	
-	df_train = view(df[row_ixes, :], 1:nrp, 1:nc)
-	df_test = view(df[row_ixes, :], nrp+1:nr, 1:nc)
-	
-	(df_train, df_test)
-end
-
 # ╔═╡ 35b5d05a-71cc-11eb-15a9-852c5a534fab
 md"""
 ### Convert to Julia Matrix/Vector
@@ -72,11 +59,10 @@ Now we will write a function that will accept a DataFrame, a list of feature nam
  - A matrix whose columns are the desired features plus a constant column (this is how we create an 'intercept')
  - An array containing the values of the output
 
-With this in mind, let's write the `get_data` function:
+With this in mind, let's write the `get_data` and `predict_output` functions (moved to `utils.jl`) as follows:
 
-"""
 
-# ╔═╡ e4da992e-71c2-11eb-36b8-93dd614051c1
+```julia
 function get_data(df, features, output)
 	df[:, :constant] .= 1.0
 	features = [:constant, features...]
@@ -85,51 +71,53 @@ function get_data(df, features, output)
 	(X_matrix, y)
 end
 
-# ╔═╡ 02f0c99e-71c5-11eb-1fe1-b3f820998d54
 function predict_output(X::Matrix{T}, weights::Vector{T}) where {T <: Real}
     # assume feature_matrix is a matrix containing the features as columns
 	# and weights is a corresponding array
     X * weights
 end
+```
+
+"""
 
 # ╔═╡ 21635b6e-71c8-11eb-2272-edec98c58339
 md"""
 ### Computing the derivative
 
 We are now going to move to computing the derivative of the regression cost function. Recall that the cost function is the sum over the data points of the squared difference between an observed output and a predicted output, plus the L2 penalty term.
-```
-Cost(w) = SUM[ (prediction - output)^2 ] + l2_penalty*(w[0]^2 + w[1]^2 + ... + w[k]^2).
-```
+
+$$Cost(w) = Σ [(prediction - output)^2 + l_2 × Σ_{i=1}^{k} w_i^2]$$
 
 Since the derivative of a sum is the sum of the derivatives, we can take the derivative of the first part (the RSS) as we did in the notebook for the unregularized case in Week 2 and add the derivative of the regularization part. <br />
 As we saw, the derivative of the RSS with respect to `w[i]` can be written as: 
-```
-2*SUM[ error*[feature_i] ]
-```
+
+$$2 × Σ_i [error × [feature_i]]$$
+
 The derivative of the regularization term with respect to `w[i]` is:
-```
-2*l2_penalty*w[i].
-```
+
+$$2 × l_2 \times w_i$$
+
 Summing both, we get
-```
-2*SUM[ error*[feature_i] ] + 2*l2_penalty*w[i].
-```
-That is, the derivative for the weight for feature i is the sum (over data points) of 2 times the product of the error and the feature itself, plus `2*l2_penalty*w[i]`. 
 
-**We will not regularize the constant.**  Thus, in the case of the constant, the derivative is just twice the sum of the errors (without the `2*l2_penalty*w[0]` term).
+$$2 \times Σ_i [error \times [feature_i] + 2 × l_2 * w_i]$$
 
-Recall that twice the sum of the product of two vectors is just twice the dot product of the two vectors. Therefore the derivative for the weight for feature_i is just two times the dot product between the values of feature_i and the current errors, plus `2*l2_penalty*w[i]`.
+That is, the derivative for the weight for feature i is the sum (over data points) of 2 times the product of the error and the feature itself, plus $2 × l_2 * w_i$. 
+
+**We will not regularize the constant.**  Thus, in the case of the constant, the derivative is just twice the sum of the errors (without the $2 × l_2 * w_0$ term).
+
+Recall that twice the sum of the product of two vectors is just twice the dot product of the two vectors. Therefore the derivative for the weight for feature_i is just two times the dot product between the values of feature_i and the current errors, plus $2 × l_2 * w_i$.
 
 With this in mind complete the following derivative function which computes the derivative of the weight given the value of the feature (over all data points) and the errors (over all data points).  
-To decide when to we are dealing with the constant (so we don't regularize it) we added the extra parameter to the call `feature_is_constant` which you should set to `True` when computing the derivative of the constant and `False` otherwise.
+
+To decide when to we are dealing with the constant (so we don't regularize it) we added the extra parameter to the call `feature_is_constant` which you should set to `true` when computing the derivative of the constant and `false` otherwise.
 
 """
 
 # ╔═╡ f377f6d4-71c9-11eb-0249-f3d63e87062b
 function feature_derivative_ridge(errors::Vector{T}, feature::Vector{T}, 
-		weights, l2_penalty; is_constant=false) where {T <: Real}
+		weights, l2; is_constant=false) where {T <: Real}
 	deriv_err = 2 * dot(feature, errors) # ≡ 2 * feature' * errors
-	deriv_l2p = l2_penalty * weights 
+	deriv_l2p = l2 * weights 
     return is_constant ? deriv_err : deriv_err + deriv_l2p
 end
 
@@ -251,10 +239,17 @@ Which weights perform best?
 """
 
 # ╔═╡ b8f7c40e-73cb-11eb-1e61-8f84439c8cb2
-function calc_rss(X, y, weights)
+md"""
+
+moved to `utils.jl`
+
+```julia
+function (X::Matrix{T}, y, weights::Vector{T})
     preds = predict_output(X, weights)
 	sum((preds .- y) .^ 2)
 end
+```
+"""
 
 # ╔═╡ cd05b5fe-73cc-11eb-35a4-952fa79374f4
 begin
@@ -388,14 +383,11 @@ md"""
 # ╟─9dcffb1c-71c1-11eb-2402-39eaa1f1b5e1
 # ╟─c39f9348-71c1-11eb-1691-1d28c6b1d916
 # ╠═1bcf25d8-71c2-11eb-05ca-6fe7c4e1b24f
-# ╠═1f7ea604-71c2-11eb-028a-a166f6f4dc5d
 # ╟─3e5d907e-71c2-11eb-2eb3-4375fb21b884
 # ╠═4c736078-71c2-11eb-225b-816745199225
-# ╠═0623d920-71ce-11eb-0936-870685f2e788
+# ╠═d17897d0-7540-11eb-1d5e-191caf244165
 # ╟─35b5d05a-71cc-11eb-15a9-852c5a534fab
 # ╟─a2928dc6-71c2-11eb-3724-29dc1448a0f3
-# ╠═e4da992e-71c2-11eb-36b8-93dd614051c1
-# ╠═02f0c99e-71c5-11eb-1fe1-b3f820998d54
 # ╟─21635b6e-71c8-11eb-2272-edec98c58339
 # ╠═96e7042c-73be-11eb-3ac5-9f9998b8c8ff
 # ╠═f377f6d4-71c9-11eb-0249-f3d63e87062b
@@ -410,7 +402,7 @@ md"""
 # ╠═c20a95dc-73ce-11eb-072e-cfdf28bb8412
 # ╠═87b80b2c-73c3-11eb-3175-0dedf19b1858
 # ╟─a2b905e0-73cb-11eb-0aef-79f5e6941f30
-# ╠═b8f7c40e-73cb-11eb-1e61-8f84439c8cb2
+# ╟─b8f7c40e-73cb-11eb-1e61-8f84439c8cb2
 # ╠═cd05b5fe-73cc-11eb-35a4-952fa79374f4
 # ╟─92029980-73cd-11eb-1de5-9fd4c888d352
 # ╟─27319a50-73d1-11eb-13ee-5b868486e887
@@ -420,4 +412,4 @@ md"""
 # ╠═4ff2dc02-73d1-11eb-333d-07031c47234b
 # ╠═4fdf127a-73d1-11eb-1b41-67a0caaa1eca
 # ╠═4fb0a88e-73d1-11eb-3eea-339d461b9e17
-# ╠═4f8574ac-73d1-11eb-2b52-dd15c43a1c73
+# ╟─4f8574ac-73d1-11eb-2b52-dd15c43a1c73

@@ -8,10 +8,7 @@ using InteractiveUtils
 begin
 	using Pkg
 	Pkg.activate("MLJ_env", shared=true)
-end
-
-# ╔═╡ 3cfba9ce-7191-11eb-2295-3b4c85656c03
-begin
+	
 	using MLJ
 	using CSV
 	using DataFrames
@@ -21,6 +18,10 @@ begin
 	using Random
  	using Plots  # using PyPlot
 end
+
+# ╔═╡ 638e7b78-7544-11eb-2a45-9544fcbeb7bc
+## include utils functions
+include("./utils.jl")
 
 # ╔═╡ 87aaecb0-7190-11eb-1572-d9110d9ffaaa
 md"""
@@ -72,17 +73,6 @@ md"""
 ### Split data into train/test sets
 """
 
-# ╔═╡ cd45cf32-7191-11eb-1e68-53bccaa9d806
-function train_test_split(df; split=0.8, seed=42, shuffled=true) 
-	Random.seed!(seed)
-	(nr, nc) = size(df)
-	nrp = round(Int, nr * split)
-	row_ixes = shuffled ? shuffle(1:nr) : 1:nr
-	df_train = view(df[row_ixes, :], 1:nrp, 1:nc)
-	df_test = view(df[row_ixes, :], nrp+1:nr, 1:nc)
-	(df_train, df_test)
-end
-
 # ╔═╡ 76617496-734e-11eb-0177-ef53e0a61ebc
 sort!(sales, [:sqft_living, :price], rev=[false, false]);
 
@@ -102,7 +92,6 @@ begin
 end
 
 # ╔═╡ e985d03e-734e-11eb-26a7-effe0c92f0fc
-# @load LinearRegressor pkg=MLJLinearModels
 @load RidgeRegressor pkg=MLJLinearModels
 
 # ╔═╡ ed0179fc-734e-11eb-3309-03b0ef4cdc96
@@ -136,6 +125,7 @@ md"""
 """
 
 # ╔═╡ 4686d706-74a8-11eb-101d-c976b98872f3
+## power_1
 round(fp0.coefs[1][2], sigdigits=2)
 
 # ╔═╡ 3c18cc2e-74a9-11eb-336b-1bdf4159d5f8
@@ -150,15 +140,12 @@ Recall from Week 3 that the polynomial fit of degree 15 changed wildly whenever 
 But first, we must reproduce the experiment we did in Week 3.
 """
 
-# ╔═╡ e054e324-7191-11eb-3e15-c1e0bf73bb0d
-sales_train, sales_test = train_test_split(sales);
-
 # ╔═╡ 4835efa8-7352-11eb-27dd-23dcf67ead55
 begin
-	(ssales_a, ssales_b) = train_test_split(sales; split=0.5, seed=42) 
+	(sales_a, sales_b) = train_test_split(sales; split=0.5, seed=42) 
 
-	(set1, set2) = train_test_split(ssales_a; split=0.5, seed=42)
-	(set3, set4) = train_test_split(ssales_b; split=0.5, seed=42)
+	(set1, set2) = train_test_split(sales_a; split=0.5, seed=42)
+	(set3, set4) = train_test_split(sales_b; split=0.5, seed=42)
 
 	(size(set1), size(set2), size(set3), size(set4))
 end
@@ -471,13 +458,12 @@ md"""
 # ╟─87aaecb0-7190-11eb-1572-d9110d9ffaaa
 # ╟─c5c92502-7190-11eb-3a75-87b7f156a7ce
 # ╠═5bf16f26-7191-11eb-1166-73a483cf120a
-# ╠═3cfba9ce-7191-11eb-2295-3b4c85656c03
 # ╟─14d8375a-734e-11eb-2518-2d4eee6b9e3e
 # ╠═55fb5a1e-734e-11eb-2019-21b125a173d1
 # ╟─7a50bd00-7191-11eb-2ed6-071e6db68422
 # ╠═890cb362-7191-11eb-251b-e155ed2d21f2
+# ╠═638e7b78-7544-11eb-2a45-9544fcbeb7bc
 # ╟─b43046d2-7191-11eb-0978-b1bfe1762756
-# ╠═cd45cf32-7191-11eb-1e68-53bccaa9d806
 # ╠═76617496-734e-11eb-0177-ef53e0a61ebc
 # ╟─a626fab6-734e-11eb-0994-f153e8264aaf
 # ╠═9f4449e2-734e-11eb-0d61-19d14b53358a
@@ -487,7 +473,6 @@ md"""
 # ╠═4686d706-74a8-11eb-101d-c976b98872f3
 # ╠═3c18cc2e-74a9-11eb-336b-1bdf4159d5f8
 # ╟─1fe9cdec-7352-11eb-1336-d98c99d2a002
-# ╠═e054e324-7191-11eb-3e15-c1e0bf73bb0d
 # ╠═4835efa8-7352-11eb-27dd-23dcf67ead55
 # ╠═b3b02ed6-7352-11eb-3a15-9f392deb56d8
 # ╟─6431250e-7354-11eb-1446-37f9f51cb959

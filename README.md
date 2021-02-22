@@ -36,8 +36,9 @@ This introduction to the specialization provides us with insights into the power
        [week 4/PA1 - Ridge Regression/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.jl)<br />
        [week 4/PA2 - Ridge Regression(GD)/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.jl)
        
- - [ ] [week 5/PA - Using LASSO to select features](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa1.ipynb)<br />
- - [ ] [week 6/PA - TBD]() 
+ - [x] [week 5/PA1 - Using LASSO to select features](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa1.ipynb)<br />
+       [week 5/PA2 - Implementing LASSO using coordinate descent](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa2.ipynb)<br />
+ - [ ] [week 6/PA - TBD]
  
 
 ### C03 - Machine Learning: Classification

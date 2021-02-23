@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.20
+# v0.12.21
 
 using Markdown
 using InteractiveUtils
@@ -8,10 +8,7 @@ using InteractiveUtils
 begin
 	using Pkg
 	Pkg.activate("MLJ_env", shared=true)
-end
-
-# ╔═╡ 6f773f48-7255-11eb-1d7d-ebad5f59c12c
-begin
+	
 	using MLJ
 	using CSV
 	using DataFrames
@@ -21,6 +18,9 @@ begin
 	using Random
  	using Plots  # using PyPlot
 end
+
+# ╔═╡ 67424342-7258-11eb-186a-01cd28c1a0a7
+include("./utils.jl");
 
 # ╔═╡ 2fd9b8c0-7255-11eb-1648-07c867431b74
 md"""
@@ -70,20 +70,6 @@ md"""
 sales = CSV.File("../../ML_UW_Spec/C02/data/kc_house_test_data.csv"; 
 	header=true) |> DataFrame;
 
-# ╔═╡ ac9cd006-7258-11eb-36da-87759d7d59ef
-first(sales, 5)
-
-# ╔═╡ 67424342-7258-11eb-186a-01cd28c1a0a7
-function train_test_split(df; split=0.8, seed=42) 
-	Random.seed!(seed)
-	(nr, nc) = size(df)
-	nrp = round(Int, nr * split)
-	row_ixes = shuffle(1:nr)
-	df_train = view(df[row_ixes, :], 1:nrp, 1:nc)
-	df_test = view(df[row_ixes, :], nrp+1:nr, 1:nc)
-	(df_train, df_test)
-end
-
 # ╔═╡ 7402efd2-7258-11eb-283f-95834d032f9a
 begin
 	sort!(sales, [:sqft_living, :price], rev=[false, false]);
@@ -97,44 +83,29 @@ md"""
 Let's start with a degree 1 polynomial, using `:sqft_living` to predict `:price` nad plot what it looks like.
 """
 
-# ╔═╡ 1a2e016e-7259-11eb-11f7-ebda74351974
-begin
-	poly_df_1 = polynomial_df(sales.sqft_living; degree=1)
-	poly_df_1[!, :price] = sales.price
-	
-	first(poly_df_1, 3)
-end
-
 # ╔═╡ d34d46fa-725a-11eb-2530-b5efd1bc0c4a
 @load LinearRegressor pkg=MLJLinearModels
 
-# ╔═╡ 37bd7248-725a-11eb-2d75-15427b89b31c
-begin
+# ╔═╡ ffa6eed8-7570-11eb-008f-6d6454ac7334
+function polynomial_model(poly_df; features=:power_1)
 	mdl1 = MLJLinearModels.LinearRegressor()
 	
-	X_1 = select(poly_df_1, :power_1)
-	y_1 = poly_df_1.price
+	X_ = select(poly_df, features)
+	y_ = poly_df.price
 	
-	mach1 = machine(mdl1, X_1, y_1)
-	fit!(mach1)
-	fp1 = fitted_params(mach1)
-	
-	with_terminal() do
-		for (name, c) in fp1.coefs
-   			println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
-		end
-		
-		println("Intercept: $(round(fp1.intercept, sigdigits=3))")
-	end
+	mach = machine(mdl1, X_, y_)
+	fit!(mach)
+	(mach, X_, y_)
 end
 
-# ╔═╡ 94e85b12-7260-11eb-0764-a13313833a2b
-typeof(X_1), typeof(y_1)
-
-# ╔═╡ 992e1d44-7259-11eb-36c2-67821627b331
-begin
-  	scatter(X_1.power_1, y_1, marker=".")
- 	plot!(X_1.power_1, predict(mach1, X_1), marker="-")
+# ╔═╡ bb640f98-7571-11eb-0e69-d1c7e300110b
+function print_coef(mach)
+	fp = fitted_params(mach)
+	for (name, c) ∈ fp.coefs
+   		println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
+	end
+		
+	println("Intercept: $(round(fp.intercept, sigdigits=3))")
 end
 
 # ╔═╡ 4b509104-7263-11eb-01a2-27074174de99
@@ -145,113 +116,15 @@ We can see, not surprisingly, that the predicted values all fall on a line, spec
 ##### Second degree polynomial
 """
 
-# ╔═╡ 95fd53b0-7263-11eb-317d-cf09779af7de
-begin
-	poly_df_2 = polynomial_df(sales.sqft_living; degree=2)
-	feature_df_2 = names(poly_df_2)
-	poly_df_2[!, :price] = sales.price
-	
-	first(poly_df_2, 3)
-end
-
-# ╔═╡ 774dba36-7263-11eb-280b-59e3c0967350
-begin
-	mdl2 = MLJLinearModels.LinearRegressor()
-	
-	X_2 = select(poly_df_2, feature_df_2)
-	y_2 = poly_df_2.price
-	
-	mach2 = machine(mdl2, X_2, y_2)
-	fit!(mach2)
-	fp2 = fitted_params(mach2)
-	
-	with_terminal() do
-		for (name, c) in fp2.coefs
-   			println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
-		end
-		
-		println("Intercept: $(round(fp2.intercept, sigdigits=3))")
-	end
-end
-
-# ╔═╡ 6bf2644c-7264-11eb-3cbb-63d558bce5e7
-## Visualization
-begin
-	scatter(X_2.power_1, y_2, legend=false, color=[:lightblue], marker=".")
- 	plot!(X_2.power_1, predict(mach2, X_2), marker="-")
-end
-
 # ╔═╡ 9ab047c6-7265-11eb-28bd-e5597084eb01
 md"""
 ##### Third degree polynomial
 """
 
-# ╔═╡ b1dc1cc2-7265-11eb-29d0-67171da70faf
-begin
-	poly_df_3 = polynomial_df(sales.sqft_living; degree=3)
-	feature_df_3 = names(poly_df_3)
-	poly_df_3[!, :price] = sales.price
-	
-	mdl3 = MLJLinearModels.LinearRegressor()
-	
-	X_3 = select(poly_df_3, feature_df_3)
-	y_3 = poly_df_3.price
-	
-	mach3 = machine(mdl3, X_3, y_3)
-	fit!(mach3)
-	fp3 = fitted_params(mach3)
-	
-	with_terminal() do
-		for (name, c) in fp3.coefs
-   			println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
-		end
-		
-		println("Intercept: $(round(fp3.intercept, sigdigits=3))")
-	end
-end
-
-# ╔═╡ 06defbd6-7266-11eb-22f7-c3f26eed97d1
-## Visualization
-begin
-	scatter(X_3.power_1, y_3, legend=false, color=[:lightblue], marker=".")
- 	plot!(X_3.power_1, predict(mach3, X_3), marker="-")
-end
-
 # ╔═╡ 30e47bb6-7266-11eb-381b-692ccdaa28e0
 md"""
 ##### 15th degree polynomial
 """
-
-# ╔═╡ 53617e0a-7266-11eb-11da-1db6f06abb27
-begin
-	poly_df_15 = polynomial_df(sales.sqft_living; degree=15)
-	feature_df_15 = names(poly_df_15)
-	poly_df_15[!, :price] = sales.price
-	
-	mdl15 = MLJLinearModels.LinearRegressor()
-	
-	X_15 = select(poly_df_15, feature_df_15)
-	y_15 = poly_df_15.price
-	
-	mach15 = machine(mdl15, X_15, y_15)
-	fit!(mach15)
-	fp15 = fitted_params(mach15)
-	
-	with_terminal() do
-		for (name, c) in fp15.coefs
-   			println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
-		end
-		
-		println("Intercept: $(round(fp15.intercept, sigdigits=3))")
-	end
-end
-
-# ╔═╡ 9be4a94c-7266-11eb-07ef-4526f53c5d1a
-## Visualization
-begin
-	scatter(X_15.power_1, y_15, legend=false, color=[:lightblue], marker=".")
- 	plot!(X_15.power_1, predict(mach15, X_15), marker="-")
-end
 
 # ╔═╡ e4e3f5a8-7266-11eb-107c-0734e0631801
 md"""
@@ -317,94 +190,141 @@ function fit_poly(tset; degree=15)
   (mach, X_, y_)
 end
 	
-function print_coeff(mach)
-  fp = fitted_params(mach)
-	
-  with_terminal() do
-	for (name, c) in fp.coefs
-	  println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
-    end
-		
-	println("Intercept: $(round(fp.intercept, sigdigits=3))")
+function print_coef(mach, ix)
+  fp = fitted_params(mach)	
+  println("\n- model $(ix)")
+  for (name, c) in fp.coefs[1:1]  # print only first coeff
+	println("$(rpad(name, 10)):  $(round(c, sigdigits=3))")
   end
+		
+  println("Intercept: $(round(fp.intercept, sigdigits=3))")
 end
 	
 end
 
-# ╔═╡ 3894cde6-726a-11eb-2839-8f76807bc97c
-md"""
-##### Model for set1
-"""
-
-# ╔═╡ 572f9ac4-726a-11eb-0697-41315716e42c
-## set 1
+# ╔═╡ 37bd7248-725a-11eb-2d75-15427b89b31c
 begin
-	(mach_set1, Xset1, yset1) = fit_poly(set1)
-	print_coeff(mach_set1)
+	poly_df_1 = polynomial_df(sales.sqft_living; degree=1)
+	poly_df_1[!, :price] = sales.price
+	
+	mach1, X_1, y_1 = polynomial_model(poly_df_1)
+	with_terminal() do
+		print_coef(mach1)
+	end
 end
 
-# ╔═╡ 572e63ac-726a-11eb-1224-b76bbb638a81
+# ╔═╡ 94e85b12-7260-11eb-0764-a13313833a2b
+typeof(X_1), typeof(y_1)
+
+# ╔═╡ 992e1d44-7259-11eb-36c2-67821627b331
+begin
+  	scatter(X_1.power_1, y_1, marker=".")
+ 	plot!(X_1.power_1, predict(mach1, X_1), marker="-")
+end
+
+# ╔═╡ 774dba36-7263-11eb-280b-59e3c0967350
+begin
+	poly_df_2 = polynomial_df(sales.sqft_living; degree=2)
+	feature_df_2 = names(poly_df_2)
+	poly_df_2[!, :price] = sales.price
+	
+	mach2, X_2, y_2 = polynomial_model(poly_df_2; features=feature_df_2)
+	
+	with_terminal() do
+		print_coef(mach2)
+	end
+end
+
+# ╔═╡ 6bf2644c-7264-11eb-3cbb-63d558bce5e7
 ## Visualization
 begin
-	scatter(Xset1.power_1, yset1, legend=false, color=[:lightblue], marker=".")
- 	plot!(Xset1.power_1, predict(mach_set1, Xset1), marker="-")
+	scatter(X_2.power_1, y_2, legend=false, color=[:lightblue], marker=".")
+ 	plot!(X_2.power_1, predict(mach2, X_2), marker="-")
 end
 
-# ╔═╡ 572e35b2-726a-11eb-3a30-094923a3c336
-md"""
-##### Model for set2
-"""
-
-# ╔═╡ 52786aee-726a-11eb-3b05-612363f3dbd3
-## set 2
+# ╔═╡ b1dc1cc2-7265-11eb-29d0-67171da70faf
 begin
-	(mach_set2, Xset2, yset2) = fit_poly(set2)
-	print_coeff(mach_set2)
+	poly_df_3 = polynomial_df(sales.sqft_living; degree=3)
+	feature_df_3 = names(poly_df_3)
+	poly_df_3[!, :price] = sales.price
+	
+	mach3, X_3, y_3 = polynomial_model(poly_df_3; features=feature_df_3)
+	
+	with_terminal() do
+		print_coef(mach3)
+	end
 end
 
-# ╔═╡ 51f1196e-726a-11eb-028d-f71e46dd9101
+# ╔═╡ 06defbd6-7266-11eb-22f7-c3f26eed97d1
 ## Visualization
 begin
-	scatter(Xset2.power_1, yset2, legend=false, color=[:lightblue], marker=".")
- 	plot!(Xset2.power_1, predict(mach_set2, Xset2), marker="-")
+	scatter(X_3.power_1, y_3, legend=false, color=[:lightblue], marker=".")
+ 	plot!(X_3.power_1, predict(mach3, X_3), marker="-")
 end
 
-# ╔═╡ 847ce18a-726a-11eb-22cb-a3c677741317
-md"""
-##### Model for set3
-"""
-
-# ╔═╡ 8064e2c0-726a-11eb-0928-f90b0e4c1193
-## set 3
+# ╔═╡ 53617e0a-7266-11eb-11da-1db6f06abb27
 begin
-	(mach_set3, Xset3, yset3) = fit_poly(set3)
-	print_coeff(mach_se3)
+	poly_df_15 = polynomial_df(sales.sqft_living; degree=15)
+	feature_df_15 = names(poly_df_15)
+	poly_df_15[!, :price] = sales.price
+	
+	mach15, X_15, y_15 = polynomial_model(poly_df_15; features=feature_df_15)
+	
+	with_terminal() do
+		print_coef(mach15)
+	end
 end
 
-# ╔═╡ 800e299c-726a-11eb-0181-0507645ce3be
+# ╔═╡ 9be4a94c-7266-11eb-07ef-4526f53c5d1a
 ## Visualization
 begin
-	scatter(Xset3.power_1, yset3, legend=false, color=[:lightblue], marker=".")
- 	plot!(Xset3.power_1, predict(mach_set3, Xset3), marker="-")
+	scatter(X_15.power_1, y_15, legend=false, color=[:lightblue], marker=".")
+ 	plot!(X_15.power_1, predict(mach15, X_15), marker="-")
 end
 
-# ╔═╡ 7fb58b3e-726a-11eb-27db-87d8b8134a3f
+# ╔═╡ 6910fdc0-7574-11eb-28a8-53fa3f98c519
 md"""
-##### Model for set4
+##### Models for set1, set2, set3 & set4
 """
 
-# ╔═╡ 7e5df8fc-726a-11eb-16c2-ad1be0706721
-## set 4
+# ╔═╡ 60b2174a-7574-11eb-19dd-9b4a0aa799e6
 begin
-	(mach_set4, Xset4, yset4) = fit_poly(set4)
-	print_coeff(mach_set4)
+	hsh = Dict{Symbol, Vector{Any}}(:machine => [], :tset => [])
+	
+	for (ix, s) ∈ enumerate((set1, set2, set3, set4))
+		(mach_, X_, y_) = fit_poly(s)
+		push!(hsh[:machine], mach_)
+		push!(hsh[:tset], (X_, y_))
+	end
+	
+	ps = []
+	for ix ∈ 1:length(hsh[:machine])
+		(X_, y_) = hsh[:tset][ix]
+		mach_ = hsh[:machine][ix]
+		
+		p1 = scatter(X_.power_1, y_, legend=false, color=[:lightblue], marker=".")
+ 		p2 = scatter!(X_.power_1, predict(mach_, X_), color=[:orange], marker="-")
+		push!(ps, (p1, p2))
+	end
 end
 
-# ╔═╡ 6b6de5e4-726b-11eb-3b84-170b5bca19d8
-## Visualization
+# ╔═╡ ec5a34f8-7574-11eb-1539-9b3d30e16bae
+with_terminal() do
+	for ix in 1:length(hsh[:machine])
+		print_coef(hsh[:machine][ix], ix)
+	end
+end
+
+# ╔═╡ 5ec6ddde-7575-11eb-0b87-4ff2de74f770
 begin
-	scatter(Xset4.power_1, yset4, legend=false, color=[:lightblue], marker=".")
- 	plot!(Xset4.power_1, predict(mach_set4, Xset4), marker="-")
+	lg1 = grid(2, 2, widths=[0.0, 0.9], heights=[0.5, 0.5])	
+	plot(ps[1]..., ps[2]..., layout=lg1)
+end
+
+# ╔═╡ 69293d76-7575-11eb-3687-1906faf2d78b
+begin
+	lg2 = grid(2, 2, widths=[0.0, 0.9], heights=[0.5, 0.5])
+	plot(ps[3]..., ps[4]..., layout=lg2)
 end
 
 # ╔═╡ d1854742-726c-11eb-0bb1-7dfb5af6af6e
@@ -508,24 +428,22 @@ end
 # ╔═╡ Cell order:
 # ╟─2fd9b8c0-7255-11eb-1648-07c867431b74
 # ╠═5dcfce72-7255-11eb-0aba-778dd1e4d053
-# ╠═6f773f48-7255-11eb-1d7d-ebad5f59c12c
 # ╟─2c111f6e-7258-11eb-1ce3-1582510c7875
 # ╠═f242f3c2-7255-11eb-1bd7-53b9ebc336df
 # ╠═a6827a5a-7257-11eb-32ee-3d43fcf750a0
 # ╠═cb48775e-7257-11eb-28b3-93708cf4f39f
 # ╟─42b14492-7258-11eb-1b78-99bbac50f8bc
 # ╠═4ef1490a-7258-11eb-0b6b-0fb70d911779
-# ╠═ac9cd006-7258-11eb-36da-87759d7d59ef
 # ╠═67424342-7258-11eb-186a-01cd28c1a0a7
 # ╠═7402efd2-7258-11eb-283f-95834d032f9a
 # ╟─ea3e6bea-7258-11eb-294b-fbca040fbd73
-# ╠═1a2e016e-7259-11eb-11f7-ebda74351974
 # ╠═d34d46fa-725a-11eb-2530-b5efd1bc0c4a
+# ╠═ffa6eed8-7570-11eb-008f-6d6454ac7334
+# ╠═bb640f98-7571-11eb-0e69-d1c7e300110b
 # ╠═37bd7248-725a-11eb-2d75-15427b89b31c
 # ╠═94e85b12-7260-11eb-0764-a13313833a2b
 # ╠═992e1d44-7259-11eb-36c2-67821627b331
 # ╟─4b509104-7263-11eb-01a2-27074174de99
-# ╠═95fd53b0-7263-11eb-317d-cf09779af7de
 # ╠═774dba36-7263-11eb-280b-59e3c0967350
 # ╠═6bf2644c-7264-11eb-3cbb-63d558bce5e7
 # ╟─9ab047c6-7265-11eb-28bd-e5597084eb01
@@ -539,18 +457,11 @@ end
 # ╠═d10379cc-7267-11eb-1d18-2fd3c85988b7
 # ╟─a012e338-7268-11eb-3fb8-b9f5183c4c68
 # ╠═f8554ba8-7268-11eb-1982-21b027f2ebdc
-# ╟─3894cde6-726a-11eb-2839-8f76807bc97c
-# ╠═572f9ac4-726a-11eb-0697-41315716e42c
-# ╠═572e63ac-726a-11eb-1224-b76bbb638a81
-# ╟─572e35b2-726a-11eb-3a30-094923a3c336
-# ╠═52786aee-726a-11eb-3b05-612363f3dbd3
-# ╠═51f1196e-726a-11eb-028d-f71e46dd9101
-# ╟─847ce18a-726a-11eb-22cb-a3c677741317
-# ╠═8064e2c0-726a-11eb-0928-f90b0e4c1193
-# ╠═800e299c-726a-11eb-0181-0507645ce3be
-# ╟─7fb58b3e-726a-11eb-27db-87d8b8134a3f
-# ╠═7e5df8fc-726a-11eb-16c2-ad1be0706721
-# ╠═6b6de5e4-726b-11eb-3b84-170b5bca19d8
+# ╟─6910fdc0-7574-11eb-28a8-53fa3f98c519
+# ╠═60b2174a-7574-11eb-19dd-9b4a0aa799e6
+# ╠═ec5a34f8-7574-11eb-1539-9b3d30e16bae
+# ╠═5ec6ddde-7575-11eb-0b87-4ff2de74f770
+# ╠═69293d76-7575-11eb-3687-1906faf2d78b
 # ╟─d1854742-726c-11eb-0bb1-7dfb5af6af6e
 # ╟─afb4130c-726d-11eb-06fb-c75c713c5f5e
 # ╠═350f14ac-726e-11eb-18ce-9379b4e8b243

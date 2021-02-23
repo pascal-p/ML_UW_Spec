@@ -1,8 +1,8 @@
+import numpy as np
 
 ##
 ## use in week 2, 4 and 5
 ##
-import numpy as np
 
 def get_numpy_data(data_sf, features, output):
     data_sf['constant'] = 1.0                # this is how you add a constant column to an SFrame
@@ -30,3 +30,7 @@ def get_rss(model, data, y):
 def calc_rss(data, y, weights):
   preds = predict_output(data, weights)
   return np.sum(np.square(preds - y))
+
+def normalize_features(f_matrix):
+  norms = np.linalg.norm(f_matrix, axis=0)
+  return (f_matrix / norms, norms)

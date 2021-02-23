@@ -39,7 +39,8 @@ This introduction to the specialization provides us with insights into the power
  - [x] [week 5/PA1 - Using LASSO to select features](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa1.ipynb)<br />
        [week 5/PA2 - Implementing LASSO using coordinate descent](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa2.ipynb)<br />
        [week 5/PA2 - Implementing LASSO using coordinate descent/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa2.jl)
- - [x] [week 6/PA - Predicting house prices using k-nearest neighbors regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.ipyn)<br />
+ - [x] [week 6/PA - Predicting house prices using k-nn regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.ipynb)<br />
+       [week 6/PA - Predicting house prices using k-nn regression/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.jl)<br />
  
 
 ### C03 - Machine Learning: Classification

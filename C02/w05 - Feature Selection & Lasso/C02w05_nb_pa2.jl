@@ -19,20 +19,6 @@ begin
 	# using Plots
 end
 
-# ╔═╡ 4e5d02be-754a-11eb-061f-41ab2f747c54
-begin
-	using LinearAlgebra
-	
-	function normalize_features(X::Matrix)
-		# (X::DT) where {DT <: Union{Matrix, Vector, Vector{Vector}}}
-		n = size(X)[2]    # norms = norm.(X)  ## L2-norm by default
-		norms = [norm(X[:, ix]) for ix in 1:n]
-		# NX = X' ./ norms  # NX = Matrix([X[:, ix] ./ norms[ix] for ix in 1:n])
-		# (NX', norms)      # (X / norms, norms)
-		(X ./ norms', norms)
-	end
-end
-
 # ╔═╡ a4ce9686-7549-11eb-2172-2d47391d1260
 include("./utils.jl")
 
@@ -67,13 +53,31 @@ In the house dataset, features vary wildly in their relative magnitude: sqft_liv
 To give equal considerations for all features, we need to normalize features as discussed in the lectures: we divide each feature by its 2-norm so that the transformed feature has norm 1.
 """
 
+# ╔═╡ 4e5d02be-754a-11eb-061f-41ab2f747c54
+md"""
+moved to `utils.jl`
+
+```julia
+using LinearAlgebra
+	
+function normalize_features(X::Matrix)
+  n = size(X)[2]
+  norms = zeros(eltype(X), n)'
+  for ix ∈ 1:n
+    norms[ix] = norm(X[:, ix])
+  end
+  (X ./ norms, norms)
+end
+```
+"""
+
 # ╔═╡ dc99317e-754a-11eb-0a8e-61ec5dff0507
 begin
 	M1 = [3. 6. 9.; 4. 8. 12.]
 	features1, norms1 = normalize_features(M1)
 	
 	@test features1 == [0.6 0.6 0.6; 0.8 0.8 0.8]
-	@test norms1 == [5.;  10.;  15.]  ## or [5.,  10.,  15.]
+	@test norms1 == [5.  10.  15.]  ## or [5.,  10.,  15.]
 end
 
 # ╔═╡ e9128af8-7555-11eb-1f4d-d1e17d70f4b3
@@ -88,7 +92,7 @@ begin
 	@test features2 ≈ [0.2672612419124244 0.3368607684266076; 
 		0.5345224838248488 0.42107596053325946; 
 		0.8017837257372732 0.8421519210665189]
-	@test norms2 ≈ [11.224972160321824, 11.874342087037917]
+	@test norms2 ≈ [11.224972160321824 11.874342087037917]
 end
 
 # ╔═╡ 984c778a-7557-11eb-21f8-dd2502fe7b73
@@ -400,7 +404,7 @@ begin
 
 	weights1e7 = lasso_cyclical_coordinate_descent(norm_tr_f_matrix, tr_output,
 		init_weights, l1₁, tol)
-	size(weights1e7)
+	(size(weights1e7), typeof(weights1e7))
 end
 
 # ╔═╡ c0ca4482-755f-11eb-156b-a7011072410a
@@ -434,7 +438,7 @@ begin
 
 	weights1e8 = lasso_cyclical_coordinate_descent(norm_tr_f_matrix, tr_output,
 		init_weights, l1₂, tol)
-	size(weights1e8)
+	(size(weights1e8), typeof(weights1e8))
 end
 
 # ╔═╡ c07b70a0-755f-11eb-30ed-cba73d960ff5
@@ -468,7 +472,7 @@ begin
 
 	weights1e4 = lasso_cyclical_coordinate_descent(norm_tr_f_matrix, tr_output,
 		init_weights, l1₃, tol)
-	size(weights1e4)
+	(size(weights1e4), typeof(weights1e4))
 end
 
 # ╔═╡ 9856bf2e-7561-11eb-0887-ff4f836e557e
@@ -516,7 +520,7 @@ Now, we can apply `weights_normalized` to the test data, without normalizing it!
 
 begin
 all_weights = [
-		w ./ norms_tr for w ∈ (weights1e4, weights1e7, weights1e8)
+		w ./ vec(norms_tr) for w ∈ (weights1e4, weights1e7, weights1e8)
 ];
 	
 size(all_weights)
@@ -543,9 +547,6 @@ md"""
 
 Which model performed best on the test data?
 """
-
-# ╔═╡ 22af1d30-7565-11eb-2020-6dd4b37497c7
-test_output
 
 # ╔═╡ 611cc566-7564-11eb-168f-052aa0209973
 with_terminal() do
@@ -574,7 +575,7 @@ end
 # ╠═9e5e1060-7549-11eb-0418-55bcd0b8c757
 # ╠═a4ce9686-7549-11eb-2172-2d47391d1260
 # ╟─2fa16676-754a-11eb-00cc-896d0e28b246
-# ╠═4e5d02be-754a-11eb-061f-41ab2f747c54
+# ╟─4e5d02be-754a-11eb-061f-41ab2f747c54
 # ╠═dc99317e-754a-11eb-0a8e-61ec5dff0507
 # ╠═e9128af8-7555-11eb-1f4d-d1e17d70f4b3
 # ╠═0d7f1fa0-754c-11eb-330b-d31a86f5566c
@@ -585,7 +586,7 @@ end
 # ╠═20799d0c-7550-11eb-16ee-676be88a80af
 # ╟─06be0f04-7557-11eb-3f7c-bfc5e5a172d4
 # ╠═06a0f408-7557-11eb-182e-8312809145d1
-# ╠═06814074-7557-11eb-2359-8fa03900e3f8
+# ╟─06814074-7557-11eb-2359-8fa03900e3f8
 # ╠═fcc38dfc-7557-11eb-048c-93e95ce9bbbc
 # ╠═04b4ddf8-7557-11eb-0d69-f7a89e8936f8
 # ╟─0498db3c-7557-11eb-1af6-9de231a4256f
@@ -625,6 +626,5 @@ end
 # ╠═c02e5654-7563-11eb-390b-ef4352bcf1fa
 # ╟─61567f18-7564-11eb-2301-9dbec94cf157
 # ╟─9298e410-7566-11eb-0b86-5376fcf9eabc
-# ╠═22af1d30-7565-11eb-2020-6dd4b37497c7
 # ╠═611cc566-7564-11eb-168f-052aa0209973
 # ╠═6e03f5ea-7564-11eb-3309-9f6131c552cf

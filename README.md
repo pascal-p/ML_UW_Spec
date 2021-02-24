@@ -19,7 +19,7 @@ This introduction to the specialization provides us with insights into the power
  - [x] [week 6/PA Deep features for image retrieval](https://github.com/pascal-p/ML_UW_Spec/blob/main/C01/w06/C01w06_Deep%20Features%20for%20Image%20Retrieval.ipynb)
 
 ### C02 - Machine Learning: Regression
- - [ ] [ML: Regression](https://www.coursera.org/learn/ml-regression)
+ - [x] [ML: Regression](https://www.coursera.org/learn/ml-regression)
 
  
  - [x] [week 1/PA - Fitting a simple linear regression model on housing data](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01%20-%20Simple%20Regression/C02w01_nb_pa.ipynb)<br />
@@ -44,14 +44,17 @@ This introduction to the specialization provides us with insights into the power
  
 
 ### C03 - Machine Learning: Classification
- - [ ] [ML: Classification](https://www.coursera.org/learn/ml-classification)
+ - [✓] [ML: Classification](https://www.coursera.org/learn/ml-classification)
 
-TBD..
+Classification is one of the most widely used techniques in machine learning, with a broad array of applications, including sentiment analysis, ad targeting, spam detection, risk assessment, medical diagnosis and image classification. The core goal of classification is to predict a category or class y from some inputs x. Through this course, we will become familiar with the fundamental models and algorithms used in classification, as well as a number of core machine learning concepts. Rather than covering all aspects of classification, we will focus on a few core techniques, which are widely used in the real-world to get state-of-the-art performance. 
 
-  - [ ] [week 1/PA - TBD]()
+  - [✓] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)
   - [ ] [week 2/PA - TBD]()
   - [ ] [week 3/PA - TBD]()
   - [ ] [week 4/PA - TBD]()
+  - [ ] [week 5/PA - TBD]()
+  - [ ] [week 6/PA - TBD]()
+  - [ ] [week 7/PA - TBD]()
 
 ### C04 - Machine Learning: Clustering & Retrieval
  - [ ] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)

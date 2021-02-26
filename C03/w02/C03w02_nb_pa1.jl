@@ -115,7 +115,8 @@ md"""
 """
 
 # ╔═╡ 0f528d0e-77df-11eb-1415-2fb0e9d6792d
-products[!, :review_clean] = remove_punctuation.(products[:, :review]);
+# products[!, :review_clean] = remove_punctuation.(products[:, :review]);
+products[!, :review] = remove_punctuation.(products[:, :review]);
 
 # ╔═╡ 0f362fec-77df-11eb-02a6-210a58c2839b
 names(products)
@@ -130,7 +131,8 @@ For each word in `important_words`, we compute a count for the number of times t
 
 # ╔═╡ 0057a50e-77e0-11eb-29d6-85c2dac67743
 function wc(text::String, word::String)
- 	length(filter(w -> w == word, split(text)))
+ 	# length(filter(w -> w == word, split(text)))
+	length(findall(word, text))
 end
 
 # ╔═╡ 51a94e8e-77e3-11eb-04c8-d1389b1f5856
@@ -139,14 +141,16 @@ function addcols!(df, words)
 		df[!, word] = wc.(df.review_clean, word)
 	end
 	
-	#for word ∈ important_words
-	#	transform!(products, :review_clean => r -> wc.(r, word) => word)
+	#for word ∈ words
+	#	transform!(df, :review_clean => r -> wc.(r, word) => word)
 	#end
 end
 
 # ╔═╡ 0f03e474-77df-11eb-2791-f165fd011737
 @time addcols!(products, important_words)
 # 135.474563 seconds (2.43 G allocations: 181.104 GiB, 9.77% gc time)
+# transform!  5.6s
+# df[!, wrod] 5.5s
 
 # ╔═╡ 0ee68550-77df-11eb-0a6e-c5bf5e3fd9ac
 length(names(products))

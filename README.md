@@ -23,24 +23,24 @@ This introduction to the specialization provides us with insights into the power
 
  
  - [x] [week 1/PA - Fitting a simple linear regression model on housing data](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01%20-%20Simple%20Regression/C02w01_nb_pa.ipynb)<br />
-       [Fitting a simple linear regression model on housing data/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01%20-%20Simple%20Regression/C02w01_nb_pa.jl)
+       [Fitting a simple linear regression model on housing data/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w01%20-%20Simple%20Regression/C02w01_nb_pa.jl)
  - [x] [week 2/PA1 - Multiple Regression Interpretation](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa1.ipynb)<br />
        [week 2/PA2 - Multiple Regression (GD)](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa2.ipynb)<br />
-       [week 2/PA1 - Multiple Regression Interpretation/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa1.jl)<br />
-       [week 2/PA2 - Multiple Regression (GD)/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa2.jl)
+       [week 2/PA1 - Multiple Regression Interpretation/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa1.jl)<br />
+       [week 2/PA2 - Multiple Regression (GD)/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w02%20-%20Mutlitple%20Regression/C02w02_nb_pa2.jl)
        
  - [x] [week 3/PA - Polynomial Regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w03%20-%20Assessing%20Performance/C02w03_nb_pa.ipynb)<br />
-       [week 3/PA - Polynomial Regression/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w03%20-%20Assessing%20Performance/C02w03_nb_pa.jl)<br />
+       [week 3/PA - Polynomial Regression/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w03%20-%20Assessing%20Performance/C02w03_nb_pa.jl)<br />
  - [x] [week 4/PA1 - Ridge Regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.ipynb)<br />
        [week 4/PA2 - Ridge Regression(GD)](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.ipynb)<br />
-       [week 4/PA1 - Ridge Regression/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.jl)<br />
-       [week 4/PA2 - Ridge Regression(GD)/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.jl)
+       [week 4/PA1 - Ridge Regression/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa1.jl)<br />
+       [week 4/PA2 - Ridge Regression(GD)/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w04%20-%20Ridge%20Regression/C02w04_nb_pa2.jl)
        
  - [x] [week 5/PA1 - Using LASSO to select features](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa1.ipynb)<br />
        [week 5/PA2 - Implementing LASSO using coordinate descent](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa2.ipynb)<br />
-       [week 5/PA2 - Implementing LASSO using coordinate descent/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa2.jl)
+       [week 5/PA2 - Implementing LASSO using coordinate descent/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05%20-%20Feature%20Selection%20%26%20Lasso/C02w05_nb_pa2.jl)
  - [x] [week 6/PA - Predicting house prices using k-nn regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.ipynb)<br />
-       [week 6/PA - Predicting house prices using k-nn regression/julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.jl)<br />
+       [week 6/PA - Predicting house prices using k-nn regression/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.jl)<br />
  
 
 ### C03 - Machine Learning: Classification
@@ -50,7 +50,7 @@ Classification is one of the most widely used techniques in machine learning, wi
 
   - [✓] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)
   - [✓] [week 2/PA1 - Implementing logistic regression from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)<br />
-        [week 2/PA1 - Implementing logistic regression from scratch/Julia](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.jl)<br />
+        [week 2/PA1 - Implementing logistic regression from scratch/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.jl)<br />
   - [ ] [week 3/PA - TBD]()
   - [ ] [week 4/PA - TBD]()
   - [ ] [week 5/PA - TBD]()

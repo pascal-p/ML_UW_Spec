@@ -49,9 +49,11 @@ This introduction to the specialization provides us with insights into the power
 Classification is one of the most widely used techniques in machine learning, with a broad array of applications, including sentiment analysis, ad targeting, spam detection, risk assessment, medical diagnosis and image classification. The core goal of classification is to predict a category or class y from some inputs x. Through this course, we will become familiar with the fundamental models and algorithms used in classification, as well as a number of core machine learning concepts. Rather than covering all aspects of classification, we will focus on a few core techniques, which are widely used in the real-world to get state-of-the-art performance. 
 
   - [✓] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)
-  - [✓] [week 2/PA1 - Implementing logistic regression from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)<br />
+  - [x] [week 2/PA1 - Implementing logistic regression from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)<br />
         [week 2/PA1 - Implementing logistic regression from scratch/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.jl)<br />
         [week 2/PA2 - Logistic Regression with L2 regularization](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa2.ipynb)<br />
+        [week 2/PA2 - Logistic Regression with L2 regularization/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa2.jl)
+        
   - [ ] [week 3/PA - TBD]()
   - [ ] [week 4/PA - TBD]()
   - [ ] [week 5/PA - TBD]()

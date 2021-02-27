@@ -39,4 +39,3 @@ def load_important_words(json_file='../data/important_words.json'):
     with open('../data/important_words.json', 'r') as f: # Reads the list of most frequent words
         important_words = json.load(f)
     return important_words
-

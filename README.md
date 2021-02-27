@@ -51,6 +51,7 @@ Classification is one of the most widely used techniques in machine learning, wi
   - [✓] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)
   - [✓] [week 2/PA1 - Implementing logistic regression from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)<br />
         [week 2/PA1 - Implementing logistic regression from scratch/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.jl)<br />
+        [week 2/PA2 - Logistic Regression with L2 regularization](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa2.ipynb)<br />
   - [ ] [week 3/PA - TBD]()
   - [ ] [week 4/PA - TBD]()
   - [ ] [week 5/PA - TBD]()

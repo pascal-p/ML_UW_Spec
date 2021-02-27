@@ -1,6 +1,7 @@
 ## utils for this C03 notebooks
 import functools
 import time
+import json
 
 
 ## decorator
@@ -32,3 +33,10 @@ def get_numpy_data(data_sf, features, label):
     label_sarray = data_sf[label]
     label_array = label_sarray.to_numpy()
     return (feature_matrix, label_array)
+
+
+def load_important_words(json_file='../data/important_words.json'):
+    with open('../data/important_words.json', 'r') as f: # Reads the list of most frequent words
+        important_words = json.load(f)
+    return important_words
+

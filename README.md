@@ -54,8 +54,9 @@ Classification is one of the most widely used techniques in machine learning, wi
         [week 2/PA2 - Logistic Regression with L2 regularization](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa2.ipynb)<br />
         [week 2/PA2 - Logistic Regression with L2 regularization/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa2.jl)
         
-  - [✓] [week 3/PA1 - Identifying safe loans with decision trees](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w03/C03w03_nb_pa1.ipynb)<br />
+  - [x] [week 3/PA1 - Identifying safe loans with decision trees](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w03/C03w03_nb_pa1.ipynb)<br />
         [week 3/PA2 - Implementing binary decision trees](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w03/C03w03_nb_pa2.ipynb)<br />
+        [week 3/PA1 - Identifying safe loans with decision trees/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w03/C03w03_nb_pa1.jl)<br />
 
   - [ ] [week 4/PA - TBD]()
   - [ ] [week 5/PA - TBD]()

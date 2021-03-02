@@ -62,6 +62,7 @@ Classification is one of the most widely used techniques in machine learning, wi
         [week 3/PA2 - Implementing binary decision trees/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w03/C03w03_nb_pa2.jl)
 
   - [x] [week 4/PA - Decision Trees in Practice](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w04/C03w04_nb_pa.ipynb)<br />
+        [week 4/PA - Decision Trees in Practice/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w04/C03w04_nb_pa.jl)<br />
   
   - [ ] [week 5/PA - TBD]()
   - [ ] [week 6/PA - TBD]()

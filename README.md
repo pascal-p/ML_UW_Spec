@@ -68,7 +68,8 @@ Classification is one of the most widely used techniques in machine learning, wi
         [week 5/PA2 - Boosting a decision stump](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w05/C03w05_nb_pa2.ipynb)<br />
         [week 5/PA1 - Exploring Ensemble Methods/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w05/C03w05_nb_pa1.jl)<br />
   
-  - [ ] [week 6/PA - TBD]()
+  - [x] [week 6/PA - Exploring precision and recall](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w06/C03w06_nb_pa.ipynb)<br />
+  
   - [ ] [week 7/PA - TBD]()
 
 ### C04 - Machine Learning: Clustering & Retrieval

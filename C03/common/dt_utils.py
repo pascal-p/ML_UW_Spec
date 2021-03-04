@@ -14,6 +14,7 @@ def sub_samples(df, target, seed=1):
     df_data = risky_df.append(safe_df)
     return (df_data, safe_df, risky_df)
 
+
 def hot_encode(df, features):
     for f in features:
         df_ohe = df[f].apply(lambda x: {x: 1})
@@ -27,11 +28,13 @@ def hot_encode(df, features):
         df = df.add_columns(df_unp)
     return df
 
+
 def inter_node_num_mistakes(labels_in_node):
     if len(labels_in_node) == 0: return 0      ## Corner case
     n_pos = (labels_in_node == 1).sum()        ## Count the number of 1's (safe loans)
     n_neg = len(labels_in_node)  - n_pos       ## or (labels_in_node == -1).sum()
     return n_neg if n_pos >= n_neg else n_pos  ## Num. of mistakes that the majority classifier makes.
+
 
 def best_splitting_feature(data, features, target):
     best_feature = None
@@ -55,6 +58,7 @@ def best_splitting_feature(data, features, target):
     ##
     return best_feature
 
+
 def create_leaf(target_values,
                 splitting_feature=None, left=None, right=None, is_leaf=True):
     ## Create a leaf node
@@ -77,13 +81,16 @@ def create_leaf(target_values,
     ##
     return leaf
 
+
 def count_nodes(tree):
     return 1 if tree is None or tree['is_leaf'] else \
         1 + count_nodes(tree['left']) + count_nodes(tree['right'])
 
+
 def count_leaves(tree):
     return 1 if tree is None or tree['is_leaf'] else \
         count_leaves(tree['left']) + count_leaves(tree['right'])
+
 
 def classify(tree, x, annotate=False):
     if tree['is_leaf']:  ## if the node is a leaf node.

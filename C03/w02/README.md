@@ -1,4 +1,4 @@
-## C03w02
+## C03w02: Learning Linear Classifiers, Overfitting & Regularization in Logistic Rrgression
 
 [Machine Learning(ML) Specialization](https://www.coursera.org/specializations/machine-learning)
   - [ML Classification Course](https://www.coursera.org/learn/ml-classification/home/welcome)
@@ -30,7 +30,7 @@ The goal of this assignment is to implement our own logistic regression classifi
 <hr />
 
 Addition;
-  - <em>[WIP]</em> a complete port to [Julia](https://www.julialang.org/)
+  - complete port to [Julia](https://www.julialang.org/)
 
 Outcome:
   - [Jupyter Notebook/PA1](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)

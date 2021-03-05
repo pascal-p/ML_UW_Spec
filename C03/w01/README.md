@@ -1,4 +1,4 @@
-## C03w01
+## C03w01: Linear Classifiers & Logistic Regression
 
 [Machine Learning(ML) Specialization](https://www.coursera.org/specializations/machine-learning)
   - [ML Classification Course](https://www.coursera.org/learn/ml-classification/home/welcome)

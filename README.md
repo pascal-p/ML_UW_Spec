@@ -49,7 +49,8 @@ Regression is one of the most important and broadly used machine learning and st
 
 Classification is one of the most widely used techniques in machine learning, with a broad array of applications, including sentiment analysis, ad targeting, spam detection, risk assessment, medical diagnosis and image classification. The core goal of classification is to predict a category or class y from some inputs x. Through this course, we will become familiar with the fundamental models and algorithms used in classification, as well as a number of core machine learning concepts. Rather than covering all aspects of classification, we will focus on a few core techniques, which are widely used in the real-world to get state-of-the-art performance. 
 
-  - [x] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)
+  - [x] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)<br />
+        [ ] <span style="color:lightgreen;"><em>WIP</em></span> [week 1/PA - Predicting sentiment from product reviews/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.jl)
   
   - [x] [week 2/PA1 - Implementing logistic regression from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)<br />
         [week 2/PA1 - Implementing logistic regression from scratch/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.jl)<br />
@@ -67,6 +68,7 @@ Classification is one of the most widely used techniques in machine learning, wi
   - [x] [week 5/PA1 - Exploring Ensemble Methods](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w05/C03w05_nb_pa1.ipynb)<br />
         [week 5/PA2 - Boosting a decision stump](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w05/C03w05_nb_pa2.ipynb)<br />
         [week 5/PA1 - Exploring Ensemble Methods/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w05/C03w05_nb_pa1.jl)<br />
+        [ ] <span style="color: lightgreen;"><em>WIP</em></span> [week 5/PA2 - Boosting a decision stump/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w05/C03w05_nb_pa2.jl)<br />
   
   - [x] [week 6/PA - Exploring precision and recall](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w06/C03w06_nb_pa.ipynb)<br />
   
@@ -83,4 +85,4 @@ TBD...
   - [ ] [week 4/PA - TBD]()
 
 <hr />
-<p style="font-size:0.25em">Feb.-Mar. 2021 Corto Inc</p>
+<p style="font-size: 0.25em;">Feb.-Mar. 2021 Corto Inc</p>

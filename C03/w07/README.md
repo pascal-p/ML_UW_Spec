@@ -15,11 +15,11 @@ The goal of this assignment is to implement a logistic regression classifier usi
 <hr />
 
 Addition;
-  - TODO: complete port to [Julia](https://www.julialang.org/)
+  - Complete port to [Julia](https://www.julialang.org/)
 
 Outcome:
   - [Jupyter Notebook/PA1](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w07/C03w07_nb_pa.ipynb)<br />
-  - TODO: [Pluto Notebook/`Julia`/PA1](#TBD)
+  - [Pluto Notebook/`Julia`/PA1](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w07/C03w07_nb_pa.jl)
 
 
 <hr />

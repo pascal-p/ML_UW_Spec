@@ -72,7 +72,7 @@ Classification is one of the most widely used techniques in machine learning, wi
   
   - [x] [week 6/PA - Exploring precision and recall](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w06/C03w06_nb_pa.ipynb)<br />
   
-  - [ ] [week 7/PA - TBD]()
+  - [x] [week 7/PA - Training Logistic Regression via Stochastic Gradient Ascent](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w07/C03w07_nb_pa.ipynb)<br />
 
 ### C04 - Machine Learning: Clustering & Retrieval
  - [ ] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)

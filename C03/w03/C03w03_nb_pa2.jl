@@ -19,16 +19,21 @@ begin
 	# using Plots
 end
 
-# ╔═╡ 7e61ae7c-7a33-11eb-26cb-5f9f535a292a
-include("./utils.jl");
+# ╔═╡ 3578d030-7eef-11eb-1d64-d7e7ff02159c
+begin
+	const DF = AbstractDataFrame # Union{DataFrame, SubDataFrame}
+	
+	include("./utils.jl");	
+	include("./dt_utils.jl");
+end
 
 # ╔═╡ 5435ff66-7a2b-11eb-1474-b96dcad21315
 md"""
-## Implementing binary decision trees
+## C03w03: Implementing binary Decision Trees
 
 The goal of this notebook is to implement your own binary decision tree classifier. We will:
     
-  - Use SFrames to do some feature engineering.
+  - Use DataFrames to do some feature engineering.
   - Transform categorical variables into binary variables.
   - Write a function to compute the number of misclassified examples in an intermediate node.
   - Write a function to find the best feature to split on.
@@ -51,7 +56,7 @@ md"""
 begin
 	loans =  CSV.File(("../../ML_UW_Spec/C03/data/lending-club-data.csv"); 
 	header=true) |> DataFrame;
-	first(loans, 3)
+	size(loans)
 end
 
 # ╔═╡ 76de16d4-7a2b-11eb-09c6-e36b6c893c1f
@@ -78,27 +83,22 @@ Since we are building a binary decision tree, we will have to convert these cate
 
 # ╔═╡ 768d6b08-7a2b-11eb-388a-8763c8da0a51
 begin
-  const Features = [:grade,         # grade of the loan            
-            :emp_length,            # number of years of employment
-            :home_ownership,        # home_ownership status: own, mortgage or rent
-            :term,                  # the term of the loan
-           ]
+  	const Features = [
+		:grade,          # grade of the loan            
+		:emp_length,     # number of years of employment
+		:home_ownership, # home_ownership status: own, mortgage or rent
+		:term,           # the term of the loan
+	]
 
-	target = :safe_loans # prediction target (y) (+1 means safe, -1 is risky)
+	const Target = :safe_loans # prediction target (y) (+1 means safe, -1 is risky)
 
 	# Extract the feature columns and target column
-	select!(loans, [Features..., target]);
+	select!(loans, [Features..., Target]);
 	length(names(loans)), names(loans)
 end
 
-# ╔═╡ c3f38e02-7a2d-11eb-0b31-6d187e952bad
-# schema(loans)
-
 # ╔═╡ dde7e8e4-7a2d-11eb-2527-3df1ab7d0796
-
-
-# ╔═╡ ddb0855c-7a2d-11eb-1e40-29db11082cb8
-
+describe(loans, :eltype, :nmissing, :first => first)
 
 # ╔═╡ 7673d8e4-7a2b-11eb-02b4-2f837181b4e9
 md"""
@@ -109,59 +109,33 @@ Just as we did in the previous assignment, we will undersample the larger class 
 
 # ╔═╡ 542db682-7a2e-11eb-35ad-25c82d6919e0
 begin
-	safe_loans_raw = loans[loans[!, target] .== 1, :]
-	risky_loans_raw = loans[loans[!, target] .== -1, :]
+	len_loans₀	 = size(loans)[1]	
+  	safe_loans₀, risky_loans₀ = df_partition(loans, Target)
+  	p_safe_loans₀, p_risky_loans₀ = df_ratios(safe_loans₀, risky_loans₀, len_loans₀);
 
-	with_terminal() do
-		@printf("Number of safe loans  : %d\n", size(safe_loans_raw)[1])
-		@printf("Number of risky loans : %d\n", size(risky_loans_raw)[1])
-	end
+  	with_terminal() do
+    	@printf("Number of safe loans  : %d\n", size(safe_loans₀)[1])
+    	@printf("Number of risky loans : %d\n", size(risky_loans₀)[1])
+    	@printf("Percentage of safe loans:  %1.2f%%\n", p_safe_loans₀ * 100.)
+    	@printf("Percentage of risky loans: %3.2f%%\n", p_risky_loans₀ * 100.)
+  	end
 end
+
+# ╔═╡ c5038900-7eec-11eb-34ff-9b3613ca036c
+loans_data = resample!(safe_loans₀, risky_loans₀);
 
 # ╔═╡ 3d3614d8-7a2e-11eb-2a8a-b53822e7928e
 begin
-	function loan_ratios(safe_loans, risky_loans; n_loans=size(loans)[1])
-  		(size(safe_loans)[1] / n_loans, size(risky_loans)[1] / n_loans)
-	end
+	len_loans₁	 = size(loans_data)[1]
+  	safe_loans₁, risky_loans₁ = df_partition(loans_data, Target)
+  	p_safe_loans₁, p_risky_loans₁ = df_ratios(safe_loans₁, risky_loans₁, len_loans₁);
 
-	p_safe_loans, p_risky_loans = loan_ratios(safe_loans_raw, risky_loans_raw)
-
-	with_terminal() do
-		@printf("Percentage of safe loans:  %1.2f%%\n", p_safe_loans * 100.) 
-		@printf("Percentage of risky loans: %3.2f%%\n", p_risky_loans * 100.)
-	end
-end
-
-# ╔═╡ 7659b164-7a2b-11eb-2d45-3fec0f726706
-"""
-Select a random sample perecentage of an index range  
-"""
-function sampling(range::Integer, perc::Float64; seed=42)
-	randperm(MersenneTwister(seed), range)[1:ceil(Integer, perc * range)]
-end
-
-# ╔═╡ 7641d404-7a2b-11eb-042d-bbc2c500ac59
-begin
-	## Since there are fewer risky loans than safe loans, find the ratio of the sizes
-	## and use that percentage to undersample the safe loans.
-	nsl = size(safe_loans_raw)[1]
-	perc = size(risky_loans_raw)[1] / nsl
-
-	risky_loans = risky_loans_raw;
-	ixes = sampling(nsl, perc; seed=42);
-	safe_loans = safe_loans_raw[ixes, :];   ## down sample safe loans
-	loans_data = [risky_loans; safe_loans]; ## concatenate 
-end
-
-# ╔═╡ 762690b8-7a2b-11eb-0257-f5a54932adc5
-begin
-	np_safe_loans, np_risky_loans = loan_ratios(safe_loans, risky_loans, n_loans=size(loans_data)[1])
-
-	with_terminal() do
-		@printf("Percentage of safe loans: %1.2f%%\n", np_safe_loans * 100.)
-		@printf("Percentage of risky loans: %1.2f%%\n", np_risky_loans * 100.)
-		@printf("Total number of loans in our new dataset: %d\n", size(loans_data)[1])
-	end
+ 	with_terminal() do
+    	@printf("Number of safe loans  : %d\n", size(safe_loans₁)[1])
+    	@printf("Number of risky loans : %d\n", size(risky_loans₁)[1])
+    	@printf("Percentage of safe loans:  %1.2f%%\n", p_safe_loans₁ * 100.)
+    	@printf("Percentage of risky loans: %3.2f%%\n", p_risky_loans₁ * 100.)
+  	end
 end
 
 # ╔═╡ 760c171a-7a2b-11eb-1341-19ba5a1824a1
@@ -184,37 +158,20 @@ we want to turn this into three features:
 ```
 """
 
-# ╔═╡ 75f6a54c-7a2b-11eb-08e8-e185d2f936b9
-function hot_encode!(df::DF; 
-		features=Features) where {DF <: Union{DataFrame, SubDataFrame}}
-	for f ∈ features
-		## get unique value over column feature
-		fval = reduce(vcat, df[!, f]) |> unique
-		
-		## apply hotencoding inplace
-		## cf. https://stackoverflow.com/questions/64565276/julia-dataframes-how-to-do-one-hot-encoding
-		transform!(df, 
-			f .=> [ByRow(v -> occursin(x, v) ? 1 : 0) for x ∈ fval] .=> Symbol.(f, fval))
-		
-		## get rid of initial feature (column)
-		select!(df, Not(f))
-	end
-end
-
 # ╔═╡ 75d98df2-7a2b-11eb-296e-ef4d312ffcfa
 loans_data[1:5, :]
 
 # ╔═╡ 75c1a64e-7a2b-11eb-21f6-55dd3a8ce164
 begin
-	hot_encode!(loans_data)
-	loans_data[1:5, :]
+	hot_encode!(loans_data);
+	loans_data[1:5, :];
 end
 
 # ╔═╡ 75a52c44-7a2b-11eb-2f02-2312f3a3dac9
 begin
 	features = names(loans_data) |> a_ -> Symbol.(a_);
 	deleteat!(features, 
-		findall(x -> x == target, features)) 
+		findall(x -> x == Target, features)) 
 end
 
 # ╔═╡ 44158e34-7a40-11eb-1d64-d7e7ff02159c
@@ -225,7 +182,7 @@ first(loans_data, 3)
 @test length(features) == 25
 
 # ╔═╡ 116eb5f8-7a33-11eb-2c4c-5f937540f987
-length(loans_data.gradeA)
+length(loans_data.grade_A)
 # vs 46508 in original notebook
 
 # ╔═╡ a5c56d68-7a32-11eb-2ef6-e58ed65dc561
@@ -234,7 +191,7 @@ md"""
 """
 
 # ╔═╡ a5a1cdf6-7a32-11eb-18dd-0dfee8eb885c
-@test sum(loans_data.gradeA) == 6537
+@test sum(loans_data.grade_A) == 6537
 # vs 6422 in original notebook
 
 # ╔═╡ a56e44e0-7a32-11eb-2587-6f5f8b8c21f3
@@ -250,12 +207,6 @@ begin
 	size(train_data), size(test_data)
     ## vs ((37224, 26), (9284, 26)) ...
 end
-
-# ╔═╡ 4f2e0080-7a40-11eb-34ff-9b3613ca036c
-first(test_data, 3)
-
-# ╔═╡ 6010feb6-7a40-11eb-2890-7577dda5d4de
-test_data[1, :]
 
 # ╔═╡ 6f88e4f6-7a33-11eb-10cf-e3e8608e616b
 md"""
@@ -286,7 +237,7 @@ function inter_node_num_mistakes(labels_in_node::AbstractVector{T}) where {T <: 
 
 	n = length(labels_in_node) 
 	n_pos = sum(labels_in_node .== 1)  ## Count the number of 1's (safe loans)
-    n_neg = n - n_pos ## or(labels_in_node == -1).sum() 
+    n_neg = n - n_pos
 	
 	## Return the number of mistakes that the majority classifier makes.
 	return n_pos ≥ n_neg ? n_neg : n_pos
@@ -366,7 +317,7 @@ function best_splitting_feature(df::DF, features::Vector{Symbol},
 end
 
 # ╔═╡ 57fb569a-7a36-11eb-1d64-d7e7ff02159c
-@test best_splitting_feature(train_data, features, target) == Symbol("term 60 months")
+@test best_splitting_feature(train_data, features, Target) == Symbol("term_ 60 months")
 
 # ╔═╡ 6ee0a5a2-7a33-11eb-31db-d164581fd26a
 md"""
@@ -390,9 +341,7 @@ First, we will write a function that creates a leaf node given a set of target v
 # ╔═╡ a553b5ee-7a32-11eb-329a-419005d73e2c
 function create_leaf(target_values; 
 		splitting_feature=nothing, 
-		left=nothing, 
-		right=nothing, 
-		is_leaf=true)
+		left=nothing, right=nothing, is_leaf=true)
 
     ## Create a leaf node
     leaf = Dict{Symbol, Any}(
@@ -412,7 +361,8 @@ function create_leaf(target_values;
     	## Store the predicted class (1 or -1) in leaf['prediction']
     	leaf[:prediction] = num_1s > num_minus_1s ? 1 : -1
 	end
-    return leaf
+    
+	leaf
 end
 
 # ╔═╡ b715aca6-7a37-11eb-30dd-677a45cd9920
@@ -491,15 +441,14 @@ function decision_tree_create(df::DF, features, target;
 						splitting_feature=string(splitting_feature), 
 						left=ltree, 
 						right=rtree, 
-						is_leaf=false)
-					
+						is_leaf=false)		
 end
 
 # ╔═╡ ae0b1116-7a3a-11eb-37bc-7df8411fb645
-function count_nodes(tree)
-    isnothing(tree) || tree[:is_leaf] ? 
-	  1 : 1 + count_nodes(tree[:left]) + count_nodes(tree[:right])
-end
+# function count_nodes(tree)
+#     isnothing(tree) || tree[:is_leaf] ? 
+# 	  1 : 1 + count_nodes(tree[:left]) + count_nodes(tree[:right])
+# end
 
 # ╔═╡ b6e1567c-7a37-11eb-2890-7577dda5d4de
 md"""
@@ -533,26 +482,9 @@ dt6_model = decision_tree_create(train_data, features, :safe_loans;
 md"""
 ### Making predictions with a decision tree
 
-As discussed in the lecture, we can make predictions from the decision tree with a simple recursive function. Below, we call this function classify, which takes in a learned tree and a test point x to classify. We include an option annotate that describes the prediction path when set to True.
+As discussed in the lecture, we can make predictions from the decision tree with a simple recursive function. Below, we call this function `classify` (cf. `dt_utils.jl`), which takes in a learned tree and a test point x to classify. We include an option annotate that describes the prediction path when set to True.
 
 """
-
-# ╔═╡ bdd28a86-7a3d-11eb-2890-7577dda5d4de
-function classify(tree, x; annotate=false) 
-    # if the node is a leaf node.
-    if tree[:is_leaf]
-      annotate && @printf("At leaf, predicting %s\n", tree[:prediction])
-      return tree[:prediction] 
-	end
-      
-	## split on feature.
-    split_feature_value = x[tree[:splitting_feature]]
-    annotate && 
-    	@printf("Split on %s => %s\n", tree[:splitting_feature], split_feature_value)
-	
-     split_feature_value == 0 ? classify(tree[:left], x; annotate) : 
-			classify(tree[:right], x; annotate)    
-end
 
 # ╔═╡ bdb7d658-7a3d-11eb-34ff-9b3613ca036c
 md"""
@@ -608,10 +540,9 @@ end
 
 # ╔═╡ 7b66e926-7a4c-11eb-08e3-635d3737c018
 begin
-	error = eval_classification_error(dt6_model, test_data, target)
-
-	# error             accuracy
-	(class_error=round(error, digits=2), class_acc=round(1. - error, digits=2))
+	error = eval_classification_error(dt6_model, test_data, Target)
+	(class_error=round(error, digits=2), 
+		class_accuracy=round(1. - error, digits=2))
 end
 
 # ╔═╡ 7b4d4fb6-7a4c-11eb-0a69-8fbbd0859786
@@ -682,23 +613,19 @@ end
 # ╔═╡ Cell order:
 # ╟─5435ff66-7a2b-11eb-1474-b96dcad21315
 # ╠═77311686-7a2b-11eb-2bc7-95b2a2211969
+# ╠═3578d030-7eef-11eb-1d64-d7e7ff02159c
 # ╟─771130dc-7a2b-11eb-170f-934c11fceede
 # ╠═76f62e40-7a2b-11eb-095e-f36e207f06a2
 # ╟─76de16d4-7a2b-11eb-09c6-e36b6c893c1f
 # ╠═76c17c4a-7a2b-11eb-2c47-97106bd58f99
 # ╟─76a83684-7a2b-11eb-1961-cb133db8c164
 # ╠═768d6b08-7a2b-11eb-388a-8763c8da0a51
-# ╠═c3f38e02-7a2d-11eb-0b31-6d187e952bad
 # ╠═dde7e8e4-7a2d-11eb-2527-3df1ab7d0796
-# ╠═ddb0855c-7a2d-11eb-1e40-29db11082cb8
 # ╟─7673d8e4-7a2b-11eb-02b4-2f837181b4e9
 # ╠═542db682-7a2e-11eb-35ad-25c82d6919e0
+# ╠═c5038900-7eec-11eb-34ff-9b3613ca036c
 # ╠═3d3614d8-7a2e-11eb-2a8a-b53822e7928e
-# ╠═7659b164-7a2b-11eb-2d45-3fec0f726706
-# ╠═7641d404-7a2b-11eb-042d-bbc2c500ac59
-# ╠═762690b8-7a2b-11eb-0257-f5a54932adc5
 # ╟─760c171a-7a2b-11eb-1341-19ba5a1824a1
-# ╠═75f6a54c-7a2b-11eb-08e8-e185d2f936b9
 # ╠═75d98df2-7a2b-11eb-296e-ef4d312ffcfa
 # ╠═75c1a64e-7a2b-11eb-21f6-55dd3a8ce164
 # ╠═75a52c44-7a2b-11eb-2f02-2312f3a3dac9
@@ -708,10 +635,7 @@ end
 # ╟─a5c56d68-7a32-11eb-2ef6-e58ed65dc561
 # ╠═a5a1cdf6-7a32-11eb-18dd-0dfee8eb885c
 # ╟─a56e44e0-7a32-11eb-2587-6f5f8b8c21f3
-# ╠═7e61ae7c-7a33-11eb-26cb-5f9f535a292a
 # ╠═6fad8afe-7a33-11eb-3208-6b289c3ccd23
-# ╠═4f2e0080-7a40-11eb-34ff-9b3613ca036c
-# ╠═6010feb6-7a40-11eb-2890-7577dda5d4de
 # ╟─6f88e4f6-7a33-11eb-10cf-e3e8608e616b
 # ╠═6f6802b8-7a33-11eb-0c47-5d8b41dcfb39
 # ╟─6f4a5e40-7a33-11eb-038f-438ba7d14f44
@@ -729,7 +653,6 @@ end
 # ╟─753b3df2-7a2b-11eb-28c0-b5bdffef414b
 # ╠═be0730f6-7a3d-11eb-30dd-677a45cd9920
 # ╟─bdeea6bc-7a3d-11eb-071c-0fb7dd06e885
-# ╠═bdd28a86-7a3d-11eb-2890-7577dda5d4de
 # ╟─bdb7d658-7a3d-11eb-34ff-9b3613ca036c
 # ╠═e82bb3ce-7a3e-11eb-1d64-d7e7ff02159c
 # ╟─96aa449a-7a4b-11eb-37bc-7df8411fb645

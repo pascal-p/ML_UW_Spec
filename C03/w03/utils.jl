@@ -4,6 +4,8 @@ using DataFrames
 using LinearAlgebra
 
 
+const DF = AbstractDataFrame
+
 """
 Split a given Dataframe into 2 sub-dataframe allowing
 for training/testing dataset split
@@ -91,6 +93,31 @@ function sampling(range::Integer, perc::Float64; seed=42)
   randperm(MersenneTwister(seed), range)[1:up_lim]
 end
 
+"""
+Partitionning a dataframe on a given binary target (here +1/-1)
+"""
+function df_partition(df::DF, target::Symbol; seed=42)
+  (df[df[!, target] .== 1, :], df[df[!, target] .!= 1, :])
+end
+
+function df_ratios(df₀::DF, df₁::DF, n::Int)
+  (size(df₀)[1] / n, size(df₁)[1] / n)
+end
+
+function resample!(df₀::DF, df₁::DF; seed=42)
+  """
+  Since there are fewer risky loans than safe loans, find the ratio of
+  the sizes and use that percentage to downsample the safe loans.
+  """
+  ## => deps on sampling(...)
+  n = size(df₀)[1]
+  perc = size(df₁)[1] / n
+
+  ## down sample safe loans
+  df₀ = df₀[sampling(n, perc; seed=seed), :];
+  [df₁; df₀]
+end
+
 
 """
 Given a DF and the features to encode, do on hot encoding of each
@@ -107,7 +134,7 @@ function hot_encode!(df::DF;
     ## apply hotencoding inplace
     ## cf. https://stackoverflow.com/questions/64565276/julia-dataframes-how-to-do-one-hot-encoding
     transform!(df,
-      f .=> [ByRow(v -> occursin(x, v) ? 1 : 0) for x ∈ fval] .=> Symbol.(f, fval))
+      f .=> [ByRow(v -> occursin(x, v) ? 1 : 0) for x ∈ fval] .=> Symbol.(f, "_", fval))
 
     ## get rid of initial feature (column)
     select!(df, Not(f))

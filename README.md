@@ -45,12 +45,12 @@ Regression is one of the most important and broadly used machine learning and st
  
 
 ### C03 - Machine Learning: Classification
- - [✓] [ML: Classification](https://www.coursera.org/learn/ml-classification)
+ - [x] [ML: Classification](https://www.coursera.org/learn/ml-classification)
 
 Classification is one of the most widely used techniques in machine learning, with a broad array of applications, including sentiment analysis, ad targeting, spam detection, risk assessment, medical diagnosis and image classification. The core goal of classification is to predict a category or class y from some inputs x. Through this course, we will become familiar with the fundamental models and algorithms used in classification, as well as a number of core machine learning concepts. Rather than covering all aspects of classification, we will focus on a few core techniques, which are widely used in the real-world to get state-of-the-art performance. 
 
   - [x] [week 1/PA - Predicting sentiment from product reviews](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.ipynb)<br />
-        [ ] <span style="color:lightgreen;"><em>WIP</em></span> [week 1/PA - Predicting sentiment from product reviews/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.jl)
+        [✓] <span style="color:lightgreen;"><em>WIP</em></span> [week 1/PA - Predicting sentiment from product reviews/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w01/C03w01_nb_pa.jl)
   
   - [x] [week 2/PA1 - Implementing logistic regression from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.ipynb)<br />
         [week 2/PA1 - Implementing logistic regression from scratch/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w02/C03w02_nb_pa1.jl)<br />
@@ -76,7 +76,7 @@ Classification is one of the most widely used techniques in machine learning, wi
         [week 7/PA - Training Logistic Regression via Stochastic Gradient Ascent/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C03/w07/C03w07_nb_pa.jl)
 
 ### C04 - Machine Learning: Clustering & Retrieval
- - [ ] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
+ - [✓] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
 
 TBD...
 

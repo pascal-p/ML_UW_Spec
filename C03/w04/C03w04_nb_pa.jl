@@ -19,14 +19,13 @@ begin
 	# using Plots
 end
 
-# ╔═╡ e9f8e942-7b29-11eb-1d64-d7e7ff02159c
-include("./utils.jl");
-
-# ╔═╡ f30f733e-7b29-11eb-34ff-9b3613ca036c
-include("./dt_utils.jl");
-
-# ╔═╡ 7e61ae7c-7a33-11eb-26cb-5f9f535a292a
-include("./utils.jl");
+# ╔═╡ 0d124834-7ef3-11eb-1d64-d7e7ff02159c
+begin
+	const DF = AbstractDataFrame # Union{DataFrame, SubDataFrame}
+	
+	include("./utils.jl");	
+	include("./dt_utils.jl");
+end
 
 # ╔═╡ 5435ff66-7a2b-11eb-1474-b96dcad21315
 md"""
@@ -50,7 +49,7 @@ md"""
 begin
 	loans =  CSV.File(("../../ML_UW_Spec/C03/data/lending-club-data.csv"); 
 	header=true) |> DataFrame;
-	first(loans, 3)
+	size(loans)
 end
 
 # ╔═╡ 76de16d4-7a2b-11eb-09c6-e36b6c893c1f
@@ -77,16 +76,17 @@ Since we are building a binary decision tree, we will have to convert these cate
 
 # ╔═╡ 768d6b08-7a2b-11eb-388a-8763c8da0a51
 begin
-  const Features = [:grade,         # grade of the loan            
-            :emp_length,            # number of years of employment
-            :home_ownership,        # home_ownership status: own, mortgage or rent
-            :term,                  # the term of the loan
-           ]
+  	const Features = [
+		:grade,          # grade of the loan            
+		:emp_length,     # number of years of employment
+		:home_ownership, # home_ownership status: own, mortgage or rent
+		:term,           # the term of the loan
+	]
 
-	target = :safe_loans # prediction target (y) (+1 means safe, -1 is risky)
+	const Target = :safe_loans # prediction target (y) (+1 means safe, -1 is risky)
 
 	# Extract the feature columns and target column
-	select!(loans, [Features..., target]);
+	select!(loans, [Features..., Target]);
 	length(names(loans)), names(loans)
 end
 
@@ -97,53 +97,35 @@ md"""
 Just as we did in the previous assignment, we will undersample the larger class (safe loans) in order to balance out our dataset. This means we are throwing away many data points.
 """
 
-# ╔═╡ 542db682-7a2e-11eb-35ad-25c82d6919e0
+# ╔═╡ 1f459740-7ef3-11eb-34ff-9b3613ca036c
 begin
-	safe_loans_raw = loans[loans[!, target] .== 1, :]
-	risky_loans_raw = loans[loans[!, target] .== -1, :]
+	len_loans₀	 = size(loans)[1]	
+  	safe_loans₀, risky_loans₀ = df_partition(loans, Target)
+  	p_safe_loans₀, p_risky_loans₀ = df_ratios(safe_loans₀, risky_loans₀, len_loans₀);
 
-	with_terminal() do
-		@printf("Number of safe loans  : %d\n", size(safe_loans_raw)[1])
-		@printf("Number of risky loans : %d\n", size(risky_loans_raw)[1])
-	end
+  	with_terminal() do
+    	@printf("Number of safe loans  : %d\n", size(safe_loans₀)[1])
+    	@printf("Number of risky loans : %d\n", size(risky_loans₀)[1])
+    	@printf("Percentage of safe loans:  %1.2f%%\n", p_safe_loans₀ * 100.)
+    	@printf("Percentage of risky loans: %3.2f%%\n", p_risky_loans₀ * 100.)
+  	end
 end
 
-# ╔═╡ 3d3614d8-7a2e-11eb-2a8a-b53822e7928e
+# ╔═╡ 32a93648-7ef3-11eb-071c-0fb7dd06e885
+loans_data = resample!(safe_loans₀, risky_loans₀);
+
+# ╔═╡ 31f2811e-7ef3-11eb-2890-7577dda5d4de
 begin
-	function loan_ratios(safe_loans, risky_loans; n_loans=size(loans)[1])
-  		(size(safe_loans)[1] / n_loans, size(risky_loans)[1] / n_loans)
-	end
+	len_loans₁	 = size(loans_data)[1]
+  	safe_loans₁, risky_loans₁ = df_partition(loans_data, Target)
+  	p_safe_loans₁, p_risky_loans₁ = df_ratios(safe_loans₁, risky_loans₁, len_loans₁);
 
-	p_safe_loans, p_risky_loans = loan_ratios(safe_loans_raw, risky_loans_raw)
-
-	with_terminal() do
-		@printf("Percentage of safe loans:  %1.2f%%\n", p_safe_loans * 100.) 
-		@printf("Percentage of risky loans: %3.2f%%\n", p_risky_loans * 100.)
-	end
-end
-
-# ╔═╡ 7641d404-7a2b-11eb-042d-bbc2c500ac59
-begin
-	## Since there are fewer risky loans than safe loans, find the ratio of the sizes
-	## and use that percentage to undersample the safe loans.
-	nsl = size(safe_loans_raw)[1]
-	perc = size(risky_loans_raw)[1] / nsl
-	risky_loans = risky_loans_raw;
-	
-	## down sample safe loans
-	safe_loans = safe_loans_raw[sampling(nsl, perc; seed=42), :];   
-	loans_data = [risky_loans; safe_loans]; 
-end
-
-# ╔═╡ 762690b8-7a2b-11eb-0257-f5a54932adc5
-begin
-	np_safe_loans, np_risky_loans = loan_ratios(safe_loans, risky_loans, n_loans=size(loans_data)[1])
-
-	with_terminal() do
-		@printf("Percentage of safe loans: %1.2f%%\n", np_safe_loans * 100.)
-		@printf("Percentage of risky loans: %1.2f%%\n", np_risky_loans * 100.)
-		@printf("Total number of loans in our new dataset: %d\n", size(loans_data)[1])
-	end
+ 	with_terminal() do
+    	@printf("Number of safe loans  : %d\n", size(safe_loans₁)[1])
+    	@printf("Number of risky loans : %d\n", size(risky_loans₁)[1])
+    	@printf("Percentage of safe loans:  %1.2f%%\n", p_safe_loans₁ * 100.)
+    	@printf("Percentage of risky loans: %3.2f%%\n", p_risky_loans₁ * 100.)
+  	end
 end
 
 # ╔═╡ 760c171a-7a2b-11eb-1341-19ba5a1824a1
@@ -179,18 +161,15 @@ end
 begin
 	features = names(loans_data) |> a_ -> Symbol.(a_);
 	deleteat!(features, 
-		findall(x -> x == target, features)) 
+		findall(x -> x == Target, features)) 
 end
-
-# ╔═╡ 44158e34-7a40-11eb-1d64-d7e7ff02159c
-first(loans_data, 3)
 
 # ╔═╡ 75736a9c-7a2b-11eb-2278-ab37447cf22d
 ## Expect 25 features after hot-encoding
 @test length(features) == 25
 
 # ╔═╡ 116eb5f8-7a33-11eb-2c4c-5f937540f987
-length(loans_data.gradeA)
+length(loans_data.grade_A)
 # vs 46508 in original notebook
 
 # ╔═╡ a5c56d68-7a32-11eb-2ef6-e58ed65dc561
@@ -199,7 +178,7 @@ md"""
 """
 
 # ╔═╡ a5a1cdf6-7a32-11eb-18dd-0dfee8eb885c
-@test sum(loans_data.gradeA) == 6537
+@test sum(loans_data.grade_A) == 6537
 # vs 6422 in original notebook
 
 # ╔═╡ a56e44e0-7a32-11eb-2587-6f5f8b8c21f3
@@ -215,9 +194,6 @@ begin
 	size(train_data), size(validation_data)
     ## vs ((37224, 26), (9284, 26)) ...
 end
-
-# ╔═╡ 4f2e0080-7a40-11eb-34ff-9b3613ca036c
-first(validation_data, 3)
 
 # ╔═╡ 6f88e4f6-7a33-11eb-10cf-e3e8608e616b
 md"""
@@ -251,8 +227,7 @@ This function simply calculates whether the number of data points at a given nod
 """
 
 # ╔═╡ 49f07e5c-7b2b-11eb-34ff-9b3613ca036c
-function reached_minimum_node_size(data::DF, 
-		min_node_size) where {DF <: Union{DataFrame, SubDataFrame}}
+function reached_minimum_node_size(data::DF, min_node_size) 
     """true when number of data points is ≤ to the minimum node size."""
     size(data)[1] ≤ min_node_size
 end
@@ -324,7 +299,7 @@ cf. include
 """
 
 # ╔═╡ ce025442-7b2b-11eb-31b8-69bdfe81ed69
-@test best_splitting_feature(train_data, features, target) == Symbol("term 60 months")
+@test best_splitting_feature(train_data, features, Target) == Symbol("term_ 60 months")
 
 # ╔═╡ cde76c36-7b2b-11eb-2ad1-017f6ac940dd
 md"""
@@ -445,8 +420,7 @@ function decision_tree_create(df::DF, features, target;
 						splitting_feature=string(splitting_feature), 
 						left=ltree, 
 						right=rtree, 
-						is_leaf=false)
-					
+						is_leaf=false)			
 end
 
 # ╔═╡ cdb69d9c-7b2b-11eb-12fa-4d42c67876b2
@@ -555,7 +529,7 @@ Now, let's use this function to evaluate the classification error of `dt6_model`
 # ╔═╡ ac4e3b42-7b35-11eb-0a69-8fbbd0859786
 with_terminal() do
 	@printf("%1.4f\n", 
-		round(eval_classification_error(dt6_model, validation_data, target), 
+		round(eval_classification_error(dt6_model, validation_data, Target), 
 			digits=4))
 end
 
@@ -567,7 +541,7 @@ Now, evaluate the validation error using `dt6_model_nes`.
 # ╔═╡ 3bf28f8e-7b37-11eb-2890-7577dda5d4de
 with_terminal() do
 	@printf("%1.4f\n", 
-		round(eval_classification_error(dt6_model_nes, validation_data, target), 
+		round(eval_classification_error(dt6_model_nes, validation_data, Target), 
 			digits=4))
 end
 
@@ -624,7 +598,7 @@ end
 
 # ╔═╡ 7b54fec0-7b37-11eb-37bc-7df8411fb645
 with_terminal() do
-	print_eval([model_1, model_2, model_3], train_data, target)
+	print_eval([model_1, model_2, model_3], train_data, Target)
 end
 
 # ╔═╡ 7b25f5d8-7b37-11eb-30dd-677a45cd9920
@@ -634,7 +608,7 @@ Now evaluate the classification error on the validation data.
 
 # ╔═╡ 69b44c90-7b38-11eb-14c6-3dd9dd0d2303
 with_terminal() do
-	print_eval([model_1, model_2, model_3], validation_data, target)
+	print_eval([model_1, model_2, model_3], validation_data, Target)
 end
 
 # ╔═╡ 6993ba5c-7b38-11eb-31b8-69bdfe81ed69
@@ -713,7 +687,7 @@ Calculate the accuracy of each model (model\_4, model\_5, or model\_6) on the va
 
 # ╔═╡ fca4be14-7b39-11eb-2890-7577dda5d4de
 with_terminal() do
-	print_eval([model_4, model_5, model_6], validation_data, target;
+	print_eval([model_4, model_5, model_6], validation_data, Target;
 	df_label=:validation, offset=4)
 end
 
@@ -775,7 +749,7 @@ Now, let us evaluate the models (model\_7, model\_8, or model\_9) on the validat
 
 # ╔═╡ b571a75c-7b3a-11eb-3b98-bd0e15b4de11
 with_terminal() do
-	print_eval([model_7, model_8, model_9], validation_data, target; 	df_label=:validation, offset=6)
+	print_eval([model_7, model_8, model_9], validation_data, Target; 	df_label=:validation, offset=6)
 end
 
 # ╔═╡ b5553504-7b3a-11eb-12fa-4d42c67876b2
@@ -800,32 +774,27 @@ md"""
 # ╔═╡ Cell order:
 # ╟─5435ff66-7a2b-11eb-1474-b96dcad21315
 # ╠═77311686-7a2b-11eb-2bc7-95b2a2211969
+# ╠═0d124834-7ef3-11eb-1d64-d7e7ff02159c
 # ╟─771130dc-7a2b-11eb-170f-934c11fceede
 # ╠═76f62e40-7a2b-11eb-095e-f36e207f06a2
 # ╟─76de16d4-7a2b-11eb-09c6-e36b6c893c1f
 # ╠═76c17c4a-7a2b-11eb-2c47-97106bd58f99
 # ╟─76a83684-7a2b-11eb-1961-cb133db8c164
 # ╠═768d6b08-7a2b-11eb-388a-8763c8da0a51
-# ╠═e9f8e942-7b29-11eb-1d64-d7e7ff02159c
-# ╠═f30f733e-7b29-11eb-34ff-9b3613ca036c
 # ╟─7673d8e4-7a2b-11eb-02b4-2f837181b4e9
-# ╠═542db682-7a2e-11eb-35ad-25c82d6919e0
-# ╠═3d3614d8-7a2e-11eb-2a8a-b53822e7928e
-# ╠═7641d404-7a2b-11eb-042d-bbc2c500ac59
-# ╠═762690b8-7a2b-11eb-0257-f5a54932adc5
+# ╠═1f459740-7ef3-11eb-34ff-9b3613ca036c
+# ╠═32a93648-7ef3-11eb-071c-0fb7dd06e885
+# ╠═31f2811e-7ef3-11eb-2890-7577dda5d4de
 # ╟─760c171a-7a2b-11eb-1341-19ba5a1824a1
 # ╠═75d98df2-7a2b-11eb-296e-ef4d312ffcfa
 # ╠═75c1a64e-7a2b-11eb-21f6-55dd3a8ce164
 # ╠═75a52c44-7a2b-11eb-2f02-2312f3a3dac9
-# ╠═44158e34-7a40-11eb-1d64-d7e7ff02159c
 # ╠═75736a9c-7a2b-11eb-2278-ab37447cf22d
 # ╠═116eb5f8-7a33-11eb-2c4c-5f937540f987
 # ╟─a5c56d68-7a32-11eb-2ef6-e58ed65dc561
 # ╠═a5a1cdf6-7a32-11eb-18dd-0dfee8eb885c
 # ╟─a56e44e0-7a32-11eb-2587-6f5f8b8c21f3
-# ╠═7e61ae7c-7a33-11eb-26cb-5f9f535a292a
 # ╠═6fad8afe-7a33-11eb-3208-6b289c3ccd23
-# ╠═4f2e0080-7a40-11eb-34ff-9b3613ca036c
 # ╟─6f88e4f6-7a33-11eb-10cf-e3e8608e616b
 # ╟─2e859492-7b2b-11eb-1d64-d7e7ff02159c
 # ╠═49f07e5c-7b2b-11eb-34ff-9b3613ca036c

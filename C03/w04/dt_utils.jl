@@ -2,11 +2,11 @@ using Printf
 
 
 function inter_node_num_mistakes(labels_in_node::AbstractVector{T}) where {T <: Real}
-    length(labels_in_node) == 0 && return 0  ## Corner case
-
   n = length(labels_in_node)
+  n == 0 && return 0  ## Corner case
+
   n_pos = sum(labels_in_node .== 1)  ## Count the number of 1's (safe loans)
-    n_neg = n - n_pos ## or(labels_in_node == -1).sum()
+  n_neg = n - n_pos ## or(labels_in_node == -1).sum()
 
   ## Return the number of mistakes that the majority classifier makes.
   return n_pos ≥ n_neg ? n_neg : n_pos
@@ -74,7 +74,7 @@ function count_leaves(tree)
 end
 
 
-function classify(tree, x; annotate=false)
+function classify(tree, x::DataFrameRow; annotate=false)
   # if the node is a leaf node.
   if tree[:is_leaf]
     annotate && @printf("At leaf, predicting %s\n", tree[:prediction])
@@ -84,10 +84,10 @@ function classify(tree, x; annotate=false)
   ## split on feature.
   split_feature_value = x[tree[:splitting_feature]]
   annotate &&
-  @printf("Split on %s => %s\n", tree[:splitting_feature], split_feature_value)
+    @printf("Split on %s => %s\n", tree[:splitting_feature], split_feature_value)
 
   split_feature_value == 0 ? classify(tree[:left], x; annotate) :
-  classify(tree[:right], x; annotate)
+    classify(tree[:right], x; annotate)
 end
 
 

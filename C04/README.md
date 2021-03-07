@@ -1,0 +1,19 @@
+## C04 - Machine Learning: Clustering & Retrieval
+
+  [Machine Learning(ML) Specialization](https://www.coursera.org/specializations/machine-learning)
+
+  - [✓] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
+
+Clustering and retrieval are some of the most high-impact machine learning tools out there.
+Retrieval is used in almost every applications and device we interact with, like in providing a set of products related to one a shopper is currently considering,
+or a list of people you might want to connect with on a social media platform.
+Clustering can be used to aid retrieval, but is a more broadly useful tool for automatically discovering structure in data, like uncovering groups of similar patients.
+
+  - [ ] [week 2/PA - TBD]()
+  - [ ] [week 3/PA - TBD]()
+  - [ ] [week 4/PA - TBD]()
+  - [ ] [week 5/PA - TBD]()
+  - [ ] [week 6/PA - TBD]()
+
+<hr />
+<p><sub><em>Feb.-Mar. 2021 Corto Inc</sub></em></p>

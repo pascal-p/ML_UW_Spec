@@ -1,7 +1,7 @@
 ## C04w02: Choosing features and metrics for nearest neighbor search
 
 [Machine Learning(ML) Specialization](https://www.coursera.org/specializations/machine-learning)
-  - [ML Classification Course](https://www.coursera.org/learn/ml-classification/home/welcome)
+  - [ML Clustering & Retrieval Course](https://www.coursera.org/learn/ml-clustering-and-retrieval/home/welcome)
 
 ### Choosing features and metrics for nearest neighbor search
 

@@ -17,10 +17,11 @@ When properly executed, clustering uncovers valuable insights from a set of unla
 <hr />
 
 Addition;
-  - <em>TODO...</em> complete port to [Julia](https://www.julialang.org/)
+  - `WIP` complete port to [Julia](https://www.julialang.org/)
 
 Outcome:
-  - [Jupyter Notebook/PA](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w03/C04w03_nb_pa.ipynb)
+  - [Jupyter Notebook/PA](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w03/C04w03_nb_pa.ipynb)<br />
+  - `WIP`[Julia Notebook/PA](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w03/C04w03_nb_pa.jl)
 
 <hr />
 <p><sub><em>Feb.-Mar. 2021 Corto Inc</sub></em></p>

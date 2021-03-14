@@ -12,10 +12,11 @@ Clustering can be used to aid retrieval, but is a more broadly useful tool for a
   - [x] [week 2/PA1 - Choosing features and metrics for nearest neighbor search](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w02/C04w02_nb_pa1.ipynb)<br />
         [week 2/PA2 - Implementing Locality Sensitive Hashing from scratch](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w02/C04w02_nb_pa2.ipynb)<br />
 
-  - [✓] [week 3/PA - Clustering text data with k-means](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w03/C04w03_nb_pa.ipynb)<br />
+  - [x] [week 3/PA - Clustering text data with k-means](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w03/C04w03_nb_pa.ipynb)<br />
 
-  - [✓] [week 4/PA1 - Implementing EM for Gaussian mixtures](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w04/C04w04_nb_pa1.ipynb)<br />
+  - [x] [week 4/PA1 - Implementing EM for Gaussian mixtures](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w04/C04w04_nb_pa1.ipynb)<br />
         [week 4/PA2 - Clustering text data with Gaussian mixtures](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w04/C04w04_nb_pa2.ipynb)<br />
+        [week 4/PA1 - Implementing EM for Gaussian mixtures`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w04/C04w04_nb_pa1.jl)<br />
 
   - [ ] [week 5/PA - TBD]()
 

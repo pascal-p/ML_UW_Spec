@@ -22,7 +22,7 @@ Instructors: [Emily Fox](https://www.coursera.org/instructor/~14032411) and [Car
  [C03/Programming Assignments](https://github.com/pascal-p/ML_UW_Spec/tree/main/C03/README.md)
 
 ### C04 - Machine Learning: Clustering & Retrieval
- - [✓] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
+ - [x] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
 
  [C04/Programming Assignments](https://github.com/pascal-p/ML_UW_Spec/tree/main/C04/README.md)
 

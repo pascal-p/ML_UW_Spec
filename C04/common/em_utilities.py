@@ -23,8 +23,9 @@ def sframe_to_scipy(x, column_name):
     ## Stack will transform x to have a row for each unique (row, key) pair.
     x = x.stack(column_name, ['feature', 'value'])
 
-    ## Map feature words to integers
-    mapping = {word:i for i, word in enumerate(sorted(x['feature'].unique()))}
+    ## Map feature words to integers and conversely (rev_mapping)
+    mapping = {word: i for (i, word) in enumerate(sorted(x['feature'].unique()))}
+    rev_mapping = {i: word for (i, word) in enumerate(sorted(x['feature'].unique()))}
     x['feature_id'] = x['feature'].apply(lambda x: mapping[x])
 
     ## Create numpy arrays that contain the data for the sparse matrix.
@@ -37,7 +38,7 @@ def sframe_to_scipy(x, column_name):
 
     ## Create a sparse matrix.
     mat = csr_matrix((data, (row_id, col_id)), shape=(width, height))
-    return mat, mapping
+    return (mat, mapping, rev_mapping)
 
 def diag(array):
     n = len(array)

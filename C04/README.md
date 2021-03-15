@@ -2,7 +2,7 @@
 
   [Machine Learning(ML) Specialization](https://www.coursera.org/specializations/machine-learning)
 
-  - [✓] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
+  - [x] [ML: Clustering & Retrieval](https://www.coursera.org/learn/ml-clustering-and-retrieval)
 
 Clustering and retrieval are some of the most high-impact machine learning tools out there.
 Retrieval is used in almost every applications and device we interact with, like in providing a set of products related to one a shopper is currently considering,
@@ -21,7 +21,7 @@ Clustering can be used to aid retrieval, but is a more broadly useful tool for a
 
   - [x] [week 5/PA - Modeling text topics with LDA](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w05/C04w05_nb_pa.ipynb)<br />
 
-  - [ ] [week 6/PA - TBD]()
+  - [x] [week 6/PA - Modeling text data with a hierarchy of clusters](https://github.com/pascal-p/ML_UW_Spec/blob/main/C04/w06/C04w06_nb_pa.ipynb)<br />
 
 <hr />
 <p><sub><em>Feb.-Mar. 2021 Corto Inc</sub></em></p>

@@ -26,8 +26,8 @@ Regression is one of the most important and broadly used machine learning and st
        [week 5/PA2 - Implementing LASSO using coordinate descent](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05/C02w05_nb_pa2.ipynb)<br />
        [week 5/PA2 - Implementing LASSO using coordinate descent/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w05/C02w05_nb_pa2.jl)
        
- - [x] [week 6/PA - Predicting house prices using k-nn regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.ipynb)<br />
-       [week 6/PA - Predicting house prices using k-nn regression/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06%20-%20Nearest%20neighbor%20%26%20Kernel%20Regression/C02w06_nb_pa.jl)<br />
+ - [x] [week 6/PA - Predicting house prices using k-nn regression](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06/C02w06_nb_pa.ipynb)<br />
+       [week 6/PA - Predicting house prices using k-nn regression/`Julia`](https://github.com/pascal-p/ML_UW_Spec/blob/main/C02/w06/C02w06_nb_pa.jl)<br />
 
 <hr />
 <p><sub><em>Feb. 2021 Corto Inc</sub></em></p>
